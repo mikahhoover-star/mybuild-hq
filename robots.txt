@@ -1,1 +1,4 @@
-User-agent: *\nAllow: /\n\nSitemap: https://mikahhoover-star.github.io/mybuild-hq/sitemap.xml\n
+User-agent: *
+Allow: /
+
+Sitemap: https://mikahhoover-star.github.io/mybuild-hq/sitemap.xml
