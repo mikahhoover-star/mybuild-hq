@@ -198,7 +198,23 @@ function showLogin() {
   document.getElementById('authScreen').style.display = 'block';
 
 }
+async function checkSession() {
 
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if (session) {
+
+    document.getElementById('landingScreen').style.display = 'none';
+
+    document.getElementById('authScreen').style.display = 'none';
+
+    document.getElementById('appScreen').style.display = 'block';
+
+  }
+
+}
+
+checkSession();
   async function signUp() {
 
   const email = document.getElementById('authEmail').value.trim();
