@@ -27,7 +27,46 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 </style>
 </head>
 <body>
-    <div id="authScreen" style="max-width:420px;margin:50px auto;padding:25px;">
+    <div id="landingScreen" style="max-width:1100px;margin:0 auto;padding:40px 20px;text-align:center;">
+
+  <h1 style="font-size:42px;margin-bottom:10px;">MyBuild HQ</h1>
+
+  <h2 style="font-size:24px;font-weight:500;">
+
+    Your Build. Your Plan. Your HQ.
+
+  </h2>
+
+  <p style="max-width:700px;margin:20px auto;font-size:18px;line-height:1.6;">
+
+    Keep your entire home build organized in one place. Track your budget,
+
+    construction progress, contractor quotes, materials, decisions,
+
+    questions and checklists.
+
+  </p>
+
+  <button onclick="showPurchase()" style="padding:16px 28px;font-size:17px;font-weight:bold;">
+
+    Get MyBuild HQ — $19.99
+
+  </button>
+
+  <button onclick="showLogin()" style="padding:16px 28px;font-size:17px;margin-left:8px;">
+
+    Already Purchased? Log In
+
+  </button>
+
+  <p style="margin-top:12px;font-size:14px;">
+
+    One-time purchase • No monthly subscription
+
+  </p>
+
+</div>
+    <div id="authScreen" style= "display:none;max-width:420px;margin:50px auto;padding:25px;">
 
   <h1>MyBuild HQ</h1>
 
@@ -134,6 +173,18 @@ const SUPABASE_URL = 'https://ibczfpeffcavrewcpdhf.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zerBMpTKgAy3id6qnLUgYA_T2PDCJwh';
 
 const supabaseClient =supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+function showPurchase() {
+
+  window.location.href = 'https://mikah50.gumroad.com/l/mybuild-hq';
+
+}
+function showLogin() {
+
+  document.getElementById('landingScreen').style.display = 'none';
+
+  document.getElementById('authScreen').style.display = 'block';
+
+}
 
   async function signUp() {
 
