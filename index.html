@@ -56,7 +56,7 @@ Progress • Questions • Checklists
 
 </p>
 
-<div style="font-size:38px;font-weight:800;margin-bottom:2px;">$19.99</div>
+<div style="font-size:38px;font-weight:800;margin-bottom:2px;">$24.99</div>
 
 <p style="margin:0 0 20px;color:#666;">One-time purchase • No subscription</p>
 
@@ -87,16 +87,16 @@ Already purchased?
 
   <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:14px;margin:8px 0;">
 
-  <input id="authPassword" type="password" placeholder="Password" style="width:100%;padding:14px;margin:8px 0;">
+  <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password" style="width:100%;padding:14px;margin:8px 0;">
 
   <button onclick="signUp()" style="width:100%;padding:14px;margin:8px 0;">Create Account</button>
 
   <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;">Log In</button>
 
-  <p id="authMessage"></p>
+  <p id="authMessage"></p>\n\n  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
 
 </div>
-<div id="appScreen" style="display:none;"> <header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><button class="ghost" onclick="show('home')">HQ</button></header>
+<div id="appScreen" style="display:none;"> <header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><div style="display:flex;gap:8px"><button class="ghost" onclick="show('home')">HQ</button><button class="ghost" onclick="logOut()">Log Out</button></div></header>
 <main class="wrap">
 <section id="home" class="section active">
 <div class="hero"><h1 id="projectTitle">My Home Build</h1><p>Everything for your build, in one place.</p><div class="stats"><div class="stat"><b id="spentStat">$0</b><span>Tracked cost</span></div><div class="stat"><b id="progressStat">0%</b><span>Progress</span></div><div class="stat"><b id="openStat">0</b><span>Open items</span></div></div></div>
