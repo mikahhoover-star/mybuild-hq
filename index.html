@@ -56,7 +56,7 @@ Progress • Questions • Checklists
 
 </p>
 
-<div style="font-size:38px;font-weight:800;margin-bottom:2px;">$19.99</div>
+<div style="font-size:38px;font-weight:800;margin-bottom:2px;">$24.99</div>
 
 <p style="margin:0 0 20px;color:#666;">One-time purchase • No subscription</p>
 
@@ -87,16 +87,24 @@ Already purchased?
 
   <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:14px;margin:8px 0;">
 
-  <input id="authPassword" type="password" placeholder="Password" style="width:100%;padding:14px;margin:8px 0;">
+  <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password" style="width:100%;padding:14px;margin:8px 0;">
 
   <button onclick="signUp()" style="width:100%;padding:14px;margin:8px 0;">Create Account</button>
 
   <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;">Log In</button>
 
-  <p id="authMessage"></p>
+  <div id="licenseGate" style="display:none;margin-top:18px;padding:18px;border:1px solid #dfe5e1;border-radius:14px;background:#fff;">
+    <h3 style="margin:0 0 8px;color:#173d2b;">Verify your purchase</h3>
+    <p style="font-size:13px;color:#68706b;line-height:1.45;">Enter the Gumroad license key from your purchase receipt. You only need to verify it once on this device.</p>
+    <input id="licenseKey" type="text" autocomplete="off" placeholder="XXXX-XXXX-XXXX-XXXX" style="width:100%;padding:14px;margin:8px 0;text-transform:uppercase;">
+    <button onclick="verifyLicense()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Verify Purchase</button>
+    <p id="licenseMessage" style="font-size:13px;"></p>
+  </div>
+
+  <p id="authMessage"></p>\n\n  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
 
 </div>
-<div id="appScreen" style="display:none;"> <header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><button class="ghost" onclick="show('home')">HQ</button></header>
+<div id="appScreen" style="display:none;"> <header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><div style="display:flex;gap:8px"><button class="ghost" onclick="show('home')">HQ</button><button class="ghost" onclick="logOut()">Log Out</button></div></header>
 <main class="wrap">
 <section id="home" class="section active">
 <div class="hero"><h1 id="projectTitle">My Home Build</h1><p>Everything for your build, in one place.</p><div class="stats"><div class="stat"><b id="spentStat">$0</b><span>Tracked cost</span></div><div class="stat"><b id="progressStat">0%</b><span>Progress</span></div><div class="stat"><b id="openStat">0</b><span>Open items</span></div></div></div>
@@ -184,6 +192,8 @@ render();
 const SUPABASE_URL = 'https://ibczfpeffcavrewcpdhf.supabase.co';
 
 const SUPABASE_KEY = 'sb_publishable_zerBMpTKgAy3id6qnLUgYA_T2PDCJwh';
+const GUMROAD_PRODUCT_ID = 'TDVYHTW6fumm_w_qSr5rcQ==';
+const LICENSE_STORAGE_KEY = 'mybuildhq_license_v1';
 
 const supabaseClient =supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 function showPurchase() {
@@ -192,26 +202,92 @@ function showPurchase() {
 
 }
 function showLogin() {
-
   document.getElementById('landingScreen').style.display = 'none';
-
   document.getElementById('authScreen').style.display = 'block';
-
+}
+function backToLanding() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'block';
+  document.getElementById('authMessage').textContent = '';
+}
+async function logOut() {
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    alert('Could not log out: ' + error.message);
+    return;
+  }
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'block';
+  show('home');
+}
+function hasVerifiedLicense() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(LICENSE_STORAGE_KEY) || 'null');
+    return !!(saved && saved.verified === true && saved.productId === GUMROAD_PRODUCT_ID && saved.licenseKey);
+  } catch {
+    return false;
+  }
+}
+function showLicenseGate() {
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'block';
+  document.getElementById('licenseGate').style.display = 'block';
+  document.getElementById('authMessage').textContent = 'Account confirmed. Verify your MyBuild HQ purchase to continue.';
+}
+async function verifyLicense() {
+  const key = document.getElementById('licenseKey').value.trim();
+  const message = document.getElementById('licenseMessage');
+  if (!key) {
+    message.textContent = 'Enter the license key from your Gumroad receipt.';
+    return;
+  }
+  message.textContent = 'Verifying purchase...';
+  try {
+    const body = new URLSearchParams({
+      product_id: GUMROAD_PRODUCT_ID,
+      license_key: key,
+      increment_uses_count: 'false'
+    });
+    const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
+      method: 'POST',
+      headers: {'Content-Type':'application/x-www-form-urlencoded'},
+      body
+    });
+    const result = await response.json();
+    const purchase = result && result.purchase ? result.purchase : {};
+    const invalid = !response.ok || !result.success || purchase.refunded === true || purchase.disputed === true || purchase.chargebacked === true;
+    if (invalid) {
+      localStorage.removeItem(LICENSE_STORAGE_KEY);
+      message.textContent = 'That license could not be verified. Check the key from your Gumroad receipt and try again.';
+      return;
+    }
+    localStorage.setItem(LICENSE_STORAGE_KEY, JSON.stringify({
+      verified: true,
+      productId: GUMROAD_PRODUCT_ID,
+      licenseKey: key,
+      verifiedAt: new Date().toISOString()
+    }));
+    message.textContent = 'Purchase verified!';
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('licenseGate').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+  } catch (err) {
+    message.textContent = 'Could not reach Gumroad. Check your connection and try again.';
+  }
 }
 async function checkSession() {
-
   const { data: { session } } = await supabaseClient.auth.getSession();
-
-  if (session) {
-
-    document.getElementById('landingScreen').style.display = 'none';
-
-    document.getElementById('authScreen').style.display = 'none';
-
-    document.getElementById('appScreen').style.display = 'block';
-
+  if (!session) return;
+  if (!hasVerifiedLicense()) {
+    showLicenseGate();
+    return;
   }
-
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
 }
 
 checkSession();
@@ -229,8 +305,8 @@ checkSession();
 
     email: email,
 
-    password: password
-
+    password: password,
+    options: { emailRedirectTo: 'https://mikahhoover-star.github.io/mybuild-hq/' }
   });
 
   if (error) {
@@ -272,9 +348,12 @@ async function signIn() {
   }
 
   message.textContent = 'Logged in successfully!';
-document.getElementById('authScreen').style.display = 'none';
-
-document.getElementById('appScreen').style.display = 'block';
+  if (!hasVerifiedLicense()) {
+    showLicenseGate();
+    return;
+  }
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
 }
 </script>
 </body>
