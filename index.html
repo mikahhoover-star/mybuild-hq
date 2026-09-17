@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>MyBuild HQ | Your Build. Your Plan. Your HQ.</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f7f2;
+      color: #1b1b1b;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #173d2b;
+      color: white;
+      padding: 18px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .hero {
+      min-height: 75vh;
+      padding: 80px 8%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 760px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e3eee6;
+      color: #173d2b;
+      padding: 7px 14px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #173d2b;
+      font-size: clamp(42px, 8vw, 72px);
+      line-height: 1.05;
+      margin-bottom: 20px;
+    }
+
+    .tagline {
+      font-size: 23px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      font-size: 18px;
+      color: #555;
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 30px;
+      background: #173d2b;
+      color: white;
+      text-decoration: none;
+      padding: 16px 30px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 17px;
+    }
+
+    .button:hover {
+      background: #245b40;
+    }
+
+    .features {
+      background: white;
+      padding: 70px 7%;
+    }
+
+    .features h2 {
+      text-align: center;
+      color: #173d2b;
+      font-size: 34px;
+      margin-bottom: 40px;
+    }
+
+    .feature-grid {
+      max-width: 1050px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .card {
+      background: #f7f7f2;
+      border: 1px solid #e2e2dc;
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .card h3 {
+      color: #173d2b;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      padding: 75px 7%;
+      text-align: center;
+    }
+
+    .price h2 {
+      color: #173d2b;
+      font-size: 36px;
+    }
+
+    .price-number {
+      font-size: 48px;
+      font-weight: 800;
+      margin: 10px 0;
+    }
+
+    footer {
+      background: #111814;
+      color: #ddd;
+      text-align: center;
+      padding: 25px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 750px) {
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 60px 6%;
+      }
+
+      .tagline {
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">MyBuild HQ</div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+
+    <div class="badge">Build smarter. Stay organized.</div>
+
+    <h1>MyBuild HQ</h1>
+
+    <div class="tagline">
+      Your Build. Your Plan. Your HQ.
+    </div>
+
+    <p>
+      Take control of your home build from the first idea to the final walkthrough.
+      Organize decisions, compare quotes, plan materials, track your build,
+      and know what questions to ask contractors — all in one place.
+    </p>
+
+    <a class="button"
+       href="https://mikah50.gumroad.com/l/mybuild-hq">
+       Get MyBuild HQ — $19.99
+    </a>
+
+  </div>
+</section>
+
+<section class="features">
+
+  <h2>Everything Your Build Needs</h2>
+
+  <div class="feature-grid">
+
+    <div class="card">
+      <h3>Build Planner</h3>
+      <p>
+        Keep the major decisions, priorities, and next steps for your home build organized.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Contractor Questions</h3>
+      <p>
+        Know what to ask before hiring contractors or approving expensive work.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Quote Comparison</h3>
+      <p>
+        Compare contractor and supplier quotes so you can see where your money is going.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Materials Planning</h3>
+      <p>
+        Plan materials and purchases before they become expensive last-minute decisions.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Decision Tracker</h3>
+      <p>
+        Keep track of selections, changes, and important decisions throughout construction.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Deal Finder</h3>
+      <p>
+        Stay organized while comparing prices and looking for ways to reduce build costs.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<section class="price">
+
+  <h2>One Purchase. Full Access.</h2>
+
+  <div class="price-number">$19.99</div>
+
+  <p>No monthly subscription. No premium tier.</p>
+
+  <a class="button"
+     href="https://mikah50.gumroad.com/l/mybuild-hq">
+     Get MyBuild HQ
+  </a>
+
+</section>
+
+<footer>
+  © 2026 MyBuild HQ • Your Build. Your Plan. Your HQ.
+</footer>
+
+</body>
+</html>
