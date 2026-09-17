@@ -27,6 +27,23 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 </style>
 </head>
 <body>
+    <div id="authScreen" style="max-width:420px;margin:50px auto;padding:25px;">
+
+  <h1>MyBuild HQ</h1>
+
+  <p>Your Build. Your Plan. Your HQ.</p>
+
+  <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:14px;margin:8px 0;">
+
+  <input id="authPassword" type="password" placeholder="Password" style="width:100%;padding:14px;margin:8px 0;">
+
+  <button onclick="signUp()" style="width:100%;padding:14px;margin:8px 0;">Create Account</button>
+
+  <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;">Log In</button>
+
+  <p id="authMessage"></p>
+
+</div>
 <header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><button class="ghost" onclick="show('home')">HQ</button></header>
 <main class="wrap">
 <section id="home" class="section active">
@@ -115,8 +132,66 @@ const SUPABASE_URL = 'https://ibczfpeffcavrewcpdhf.supabase.co';
 
 const SUPABASE_KEY = 'sb_publishable_zerBMpTKgAy3id6qnLUgYA_T2PDCJwh';
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient =supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+  async function signUp() {
+
+  const email = document.getElementById('authEmail').value.trim();
+
+  const password = document.getElementById('authPassword').value;
+
+  const message = document.getElementById('authMessage');
+
+  message.textContent = 'Creating account...';
+
+  const { data, error } = await supabaseClient.auth.signUp({
+
+    email: email,
+
+    password: password
+
+  });
+
+  if (error) {
+
+    message.textContent = error.message;
+
+    return;
+
+  }
+
+  message.textContent = 'Account created! Check your email to confirm your account.';
+
+}
+
+async function signIn() {
+
+  const email = document.getElementById('authEmail').value.trim();
+
+  const password = document.getElementById('authPassword').value;
+
+  const message = document.getElementById('authMessage');
+
+  message.textContent = 'Logging in...';
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+
+    email: email,
+
+    password: password
+
+  });
+
+  if (error) {
+
+    message.textContent = error.message;
+
+    return;
+
+  }
+
+  message.textContent = 'Logged in successfully!';
+}
 </script>
 </body>
 </html>
