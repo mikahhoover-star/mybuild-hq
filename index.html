@@ -94,11 +94,19 @@ Already purchased?
   <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;">Log In</button>
 
   <div id="licenseGate" style="display:none;margin-top:18px;padding:18px;border:1px solid #dfe5e1;border-radius:14px;background:#fff;">
-    <h3 style="margin:0 0 8px;color:#173d2b;">Verify your purchase</h3>
-    <p style="font-size:13px;color:#68706b;line-height:1.45;">Enter the Gumroad license key from your purchase receipt. You only need to verify it once on this device.</p>
-    <input id="licenseKey" type="text" autocomplete="off" placeholder="XXXX-XXXX-XXXX-XXXX" style="width:100%;padding:14px;margin:8px 0;text-transform:uppercase;">
-    <button onclick="verifyLicense()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Verify Purchase</button>
-    <p id="licenseMessage" style="font-size:13px;"></p>
+    <h3 style="margin:0 0 8px;color:#173d2b;">Unlock MyBuild HQ</h3>
+    <p style="font-size:14px;color:#68706b;line-height:1.5;margin-bottom:12px;">Your purchase is complete. One last step: paste the <strong>license key</strong> Gumroad gave you, then tap <strong>Unlock MyBuild HQ</strong>.</p>
+    <div style="background:#f7f7f2;border-radius:12px;padding:13px;margin:0 0 12px;font-size:13px;line-height:1.55;color:#444;text-align:left;">
+      <strong style="color:#173d2b;">Where is my license key?</strong><br>
+      1. Open your Gumroad purchase receipt or product page.<br>
+      2. Find the section labeled <strong>License key</strong>.<br>
+      3. Copy the key and paste it below.
+    </div>
+    <input id="licenseKey" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your license key here" style="width:100%;padding:14px;margin:8px 0;">
+    <button onclick="pasteLicense()" type="button" style="width:100%;padding:12px;margin:4px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Paste License Key</button>
+    <button onclick="verifyLicense()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Unlock MyBuild HQ →</button>
+    <p id="licenseMessage" style="font-size:13px;line-height:1.45;"></p>
+    <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">You only need to verify this browser once. Keep your Gumroad receipt in case you use a different device later.</p>
   </div>
 
   <p id="authMessage"></p>\n\n  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
@@ -236,6 +244,21 @@ function showLicenseGate() {
   document.getElementById('authScreen').style.display = 'block';
   document.getElementById('licenseGate').style.display = 'block';
   document.getElementById('authMessage').textContent = 'Account confirmed. Verify your MyBuild HQ purchase to continue.';
+}
+async function pasteLicense() {
+  const message = document.getElementById('licenseMessage');
+  try {
+    const text = await navigator.clipboard.readText();
+    if (!text) {
+      message.textContent = 'Nothing was found on your clipboard. Copy the license key from Gumroad first.';
+      return;
+    }
+    document.getElementById('licenseKey').value = text.trim();
+    message.textContent = 'License key pasted. Tap Unlock MyBuild HQ.';
+  } catch {
+    document.getElementById('licenseKey').focus();
+    message.textContent = 'Press and hold in the box, then tap Paste.';
+  }
 }
 async function verifyLicense() {
   const key = document.getElementById('licenseKey').value.trim();
