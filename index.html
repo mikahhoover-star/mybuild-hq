@@ -80,7 +80,7 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 <section id="punch" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Punch List</h2></div><div class="card"><h3>Add Issue</h3><div class="row"><div><label>Area</label><input id="punchArea" placeholder="Primary bath"></div><div><label>Responsible</label><input id="punchWho" placeholder="Contractor"></div></div><label>Issue</label><input id="punchIssue" placeholder="Touch up trim"><button class="primary" onclick="addItem('punch')">Add Issue</button></div><div class="card"><h3>Open / Completed</h3><div id="punchList"></div></div></section>
 </main>
 <div class="bottom"><button onclick="show('home')">⌂ MyBuild HQ</button></div>
-
+</div>
 <script>
 const KEY='mybuildhq_v1';
 const phases=['Planning & permits','Sitework','Foundation','Framing','Roof & dry-in','Rough plumbing','Rough electrical','HVAC','Insulation','Drywall','Interior finishes','Exterior & grading','Final inspections','Walkthrough & closeout'];
@@ -120,7 +120,7 @@ function render(){
  questionList.innerHTML=questions.map(x=>`<div class="check"><span>☐</span><span>${esc(x)}</span></div>`).join('');
  let all=baseChecks.concat(db.customChecks);checkList.innerHTML=all.map((x,i)=>`<label class="check ${db.checks[x]?'done':''}"><input type="checkbox" ${db.checks[x]?'checked':''} onchange="toggleMap('checks',${JSON.stringify(x)})"><span>${esc(x)}</span></label>`).join('');
 }
-</div>
+
 function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);persist();alert('Backup imported')}catch{alert('That backup file could not be read')}};r.readAsText(f)}
 render();
