@@ -192,11 +192,25 @@ function showPurchase() {
 
 }
 function showLogin() {
-
   document.getElementById('landingScreen').style.display = 'none';
-
   document.getElementById('authScreen').style.display = 'block';
-
+}
+function backToLanding() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'block';
+  document.getElementById('authMessage').textContent = '';
+}
+async function logOut() {
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    alert('Could not log out: ' + error.message);
+    return;
+  }
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'block';
+  show('home');
 }
 async function checkSession() {
 
@@ -229,8 +243,8 @@ checkSession();
 
     email: email,
 
-    password: password
-
+    password: password,
+    options: { emailRedirectTo: 'https://mikahhoover-star.github.io/mybuild-hq/' }
   });
 
   if (error) {
