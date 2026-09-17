@@ -1,272 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>MyBuild HQ | Your Build. Your Plan. Your HQ.</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f7f7f2;
-      color: #1b1b1b;
-      line-height: 1.6;
-    }
-
-    header {
-      background: #173d2b;
-      color: white;
-      padding: 18px 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -1px;
-    }
-
-    .hero {
-      min-height: 75vh;
-      padding: 80px 8%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .hero-content {
-      max-width: 760px;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #e3eee6;
-      color: #173d2b;
-      padding: 7px 14px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      color: #173d2b;
-      font-size: clamp(42px, 8vw, 72px);
-      line-height: 1.05;
-      margin-bottom: 20px;
-    }
-
-    .tagline {
-      font-size: 23px;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-
-    .hero p {
-      max-width: 650px;
-      margin: auto;
-      font-size: 18px;
-      color: #555;
-    }
-
-    .button {
-      display: inline-block;
-      margin-top: 30px;
-      background: #173d2b;
-      color: white;
-      text-decoration: none;
-      padding: 16px 30px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 17px;
-    }
-
-    .button:hover {
-      background: #245b40;
-    }
-
-    .features {
-      background: white;
-      padding: 70px 7%;
-    }
-
-    .features h2 {
-      text-align: center;
-      color: #173d2b;
-      font-size: 34px;
-      margin-bottom: 40px;
-    }
-
-    .feature-grid {
-      max-width: 1050px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
-    }
-
-    .card {
-      background: #f7f7f2;
-      border: 1px solid #e2e2dc;
-      border-radius: 12px;
-      padding: 28px;
-    }
-
-    .card h3 {
-      color: #173d2b;
-      margin-bottom: 10px;
-    }
-
-    .price {
-      padding: 75px 7%;
-      text-align: center;
-    }
-
-    .price h2 {
-      color: #173d2b;
-      font-size: 36px;
-    }
-
-    .price-number {
-      font-size: 48px;
-      font-weight: 800;
-      margin: 10px 0;
-    }
-
-    footer {
-      background: #111814;
-      color: #ddd;
-      text-align: center;
-      padding: 25px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 750px) {
-      .feature-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding: 60px 6%;
-      }
-
-      .tagline {
-        font-size: 20px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173d2b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>MyBuild HQ | Your Build. Your Plan. Your HQ.</title>
+<style>
+:root{--g:#173d2b;--g2:#245b42;--bg:#f7f7f2;--card:#fff;--ink:#1b1b1b;--muted:#68706b;--soft:#e5eee8;--line:#dfe5e1;--danger:#a83a32}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{position:sticky;top:0;z-index:20;background:var(--g);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px #0002}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:21px}.logo{width:40px;height:40px;border-radius:11px;background:#fff;color:var(--g);display:grid;place-items:center;font-size:22px}.tag{font-size:11px;opacity:.82;font-weight:500}
+.wrap{max-width:980px;margin:auto;padding:18px 14px 90px}.hero{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;border-radius:20px;padding:22px;margin-bottom:16px}.hero h1{margin:0 0 5px;font-size:26px}.hero p{margin:0;opacity:.86}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:17px}.stat{background:#ffffff16;border:1px solid #ffffff22;border-radius:14px;padding:12px}.stat b{display:block;font-size:18px}.stat span{font-size:11px;opacity:.8}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.tool{border:1px solid var(--line);background:var(--card);border-radius:17px;padding:16px;text-align:left;box-shadow:0 3px 14px #173d2b0b}.tool .ico{font-size:25px}.tool b{display:block;color:var(--g);margin:8px 0 3px}.tool small{color:var(--muted);line-height:1.35}
+.section{display:none}.section.active{display:block}.topline{display:flex;gap:10px;align-items:center;margin-bottom:14px}.back{border:0;background:var(--soft);color:var(--g);padding:10px 13px;border-radius:11px;font-weight:700}.card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:12px}.card h3{margin:0 0 12px;color:var(--g)}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px 0 5px}input,select,textarea{width:100%;border:1px solid #ccd6cf;border-radius:10px;padding:11px;background:#fff;color:var(--ink)}textarea{min-height:78px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.primary{border:0;background:var(--g);color:#fff;padding:11px 14px;border-radius:11px;font-weight:700;margin-top:10px}.ghost{border:1px solid var(--line);background:#fff;color:var(--g);padding:9px 11px;border-radius:10px}.danger{color:var(--danger)}
+.item{border-top:1px solid var(--line);padding:11px 0;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.item:first-of-type{border-top:0}.item p{margin:3px 0;color:var(--muted);font-size:13px}.item strong{color:var(--g)}.actions{display:flex;gap:6px}
+.progress{height:10px;background:var(--soft);border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--g);width:0}
+.check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}.check input{width:auto;margin-top:3px}.check.done span{text-decoration:line-through;color:var(--muted)}
+.empty{color:var(--muted);font-size:13px;padding:8px 0}.note{font-size:12px;color:var(--muted);line-height:1.45}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:9px max(12px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:30}.bottom button{border:0;background:transparent;color:var(--g);font-weight:800}
+@media(min-width:720px){.grid{grid-template-columns:repeat(4,1fr)}.wrap{padding-top:28px}.hero{padding:30px}.stats{max-width:560px}}
+</style>
 </head>
-
 <body>
-
-<header>
-  <div class="logo">MyBuild HQ</div>
-</header>
-
-<section class="hero">
-  <div class="hero-content">
-
-    <div class="badge">Build smarter. Stay organized.</div>
-
-    <h1>MyBuild HQ</h1>
-
-    <div class="tagline">
-      Your Build. Your Plan. Your HQ.
-    </div>
-
-    <p>
-      Take control of your home build from the first idea to the final walkthrough.
-      Organize decisions, compare quotes, plan materials, track your build,
-      and know what questions to ask contractors — all in one place.
-    </p>
-
-    <a class="button"
-       href="https://mikah50.gumroad.com/l/mybuild-hq">
-       Get MyBuild HQ — $19.99
-    </a>
-
-  </div>
+<header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><button class="ghost" onclick="show('home')">HQ</button></header>
+<main class="wrap">
+<section id="home" class="section active">
+<div class="hero"><h1 id="projectTitle">My Home Build</h1><p>Everything for your build, in one place.</p><div class="stats"><div class="stat"><b id="spentStat">$0</b><span>Tracked cost</span></div><div class="stat"><b id="progressStat">0%</b><span>Progress</span></div><div class="stat"><b id="openStat">0</b><span>Open items</span></div></div></div>
+<div class="grid">
+<button class="tool" onclick="show('project')"><span class="ico">🏠</span><b>Project</b><small>Build details & goals</small></button>
+<button class="tool" onclick="show('budget')"><span class="ico">💵</span><b>Budget</b><small>Track costs & spending</small></button>
+<button class="tool" onclick="show('progress')"><span class="ico">📈</span><b>Build Progress</b><small>Track construction phases</small></button>
+<button class="tool" onclick="show('decisions')"><span class="ico">✓</span><b>Decisions</b><small>Record important choices</small></button>
+<button class="tool" onclick="show('quotes')"><span class="ico">🏷️</span><b>Quotes</b><small>Compare contractors</small></button>
+<button class="tool" onclick="show('materials')"><span class="ico">🧱</span><b>Materials</b><small>Selections & ordering</small></button>
+<button class="tool" onclick="show('questions')"><span class="ico">🔨</span><b>Contractor Questions</b><small>Questions before you hire</small></button>
+<button class="tool" onclick="show('checklists')"><span class="ico">📋</span><b>Checklists</b><small>Stay ahead of each phase</small></button>
+<button class="tool" onclick="show('punch')"><span class="ico">🛠️</span><b>Punch List</b><small>Final fixes & walkthrough</small></button>
+</div>
+<div class="card" style="margin-top:14px"><h3>Your data</h3><p class="note">This version saves your entries on this device using your browser. Use Export Backup occasionally so you have a copy.</p><button class="primary" onclick="exportData()">Export Backup</button> <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
 </section>
 
-<section class="features">
+<section id="project" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Project</h2></div><div class="card"><h3>Build Profile</h3><label>Project name</label><input data-field="projectName" placeholder="My Home Build"><div class="row"><div><label>Target budget</label><input data-field="targetBudget" type="number" inputmode="decimal" placeholder="250000"></div><div><label>Target move-in</label><input data-field="moveIn" type="date"></div></div><label>Builder / contractor</label><input data-field="builder" placeholder="Company or person"><label>Property / location</label><input data-field="location" placeholder="City, state or project address"><label>Must-haves & goals</label><textarea data-field="goals" placeholder="What matters most for this build?"></textarea><button class="primary" onclick="saveFields()">Save Project</button></div></section>
 
-  <h2>Everything Your Build Needs</h2>
+<section id="budget" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Budget</h2></div><div class="card"><h3>Add Cost</h3><div class="row"><div><label>Category</label><input id="budgetCat" placeholder="Framing"></div><div><label>Amount</label><input id="budgetAmt" type="number" inputmode="decimal" placeholder="12000"></div></div><label>Notes</label><input id="budgetNote" placeholder="Deposit, invoice, allowance..."><button class="primary" onclick="addItem('budget')">Add Cost</button></div><div class="card"><h3>Tracked Costs</h3><div id="budgetList"></div></div></section>
 
-  <div class="feature-grid">
+<section id="progress" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Build Progress</h2></div><div class="card"><h3>Construction Phases</h3><div class="progress"><div class="bar" id="phaseBar"></div></div><p class="note" id="phaseText"></p><div id="phaseList"></div></div></section>
 
-    <div class="card">
-      <h3>Build Planner</h3>
-      <p>
-        Keep the major decisions, priorities, and next steps for your home build organized.
-      </p>
-    </div>
+<section id="decisions" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Decisions</h2></div><div class="card"><h3>Record Decision</h3><label>Decision</label><input id="decisionName" placeholder="Kitchen countertop"><div class="row"><div><label>Choice</label><input id="decisionChoice" placeholder="Quartz"></div><div><label>Cost impact</label><input id="decisionCost" type="number" inputmode="decimal" placeholder="0"></div></div><label>Notes</label><input id="decisionNote" placeholder="Color, model, deadline..."><button class="primary" onclick="addItem('decisions')">Save Decision</button></div><div class="card"><h3>Decision Log</h3><div id="decisionList"></div></div></section>
 
-    <div class="card">
-      <h3>Contractor Questions</h3>
-      <p>
-        Know what to ask before hiring contractors or approving expensive work.
-      </p>
-    </div>
+<section id="quotes" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Quotes</h2></div><div class="card"><h3>Add Quote</h3><label>Company / contractor</label><input id="quoteCompany" placeholder="Contractor name"><div class="row"><div><label>Trade</label><input id="quoteTrade" placeholder="Roofing"></div><div><label>Total</label><input id="quoteTotal" type="number" inputmode="decimal" placeholder="0"></div></div><label>Scope / exclusions / notes</label><textarea id="quoteNote" placeholder="What's included? Allowances? Timeline?"></textarea><button class="primary" onclick="addItem('quotes')">Save Quote</button></div><div class="card"><h3>Saved Quotes</h3><div id="quoteList"></div></div></section>
 
-    <div class="card">
-      <h3>Quote Comparison</h3>
-      <p>
-        Compare contractor and supplier quotes so you can see where your money is going.
-      </p>
-    </div>
+<section id="materials" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Materials</h2></div><div class="card"><h3>Add Material</h3><label>Item</label><input id="matName" placeholder="Windows"><div class="row"><div><label>Selection / model</label><input id="matChoice" placeholder="Brand / style"></div><div><label>Budget</label><input id="matBudget" type="number" inputmode="decimal" placeholder="0"></div></div><label>Status</label><select id="matStatus"><option>Planning</option><option>Selected</option><option>Ordered</option><option>Delivered</option><option>Installed</option></select><button class="primary" onclick="addItem('materials')">Save Material</button></div><div class="card"><h3>Materials Planner</h3><div id="matList"></div></div></section>
 
-    <div class="card">
-      <h3>Materials Planning</h3>
-      <p>
-        Plan materials and purchases before they become expensive last-minute decisions.
-      </p>
-    </div>
+<section id="questions" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Contractor Questions</h2></div><div class="card"><h3>Before You Hire</h3><div id="questionList"></div></div></section>
+<section id="checklists" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Checklists</h2></div><div class="card"><h3>Build Checklist</h3><div id="checkList"></div><label>Add your own item</label><input id="customCheck" placeholder="Custom task"><button class="primary" onclick="addCustomCheck()">Add Item</button></div></section>
 
-    <div class="card">
-      <h3>Decision Tracker</h3>
-      <p>
-        Keep track of selections, changes, and important decisions throughout construction.
-      </p>
-    </div>
+<section id="punch" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Punch List</h2></div><div class="card"><h3>Add Issue</h3><div class="row"><div><label>Area</label><input id="punchArea" placeholder="Primary bath"></div><div><label>Responsible</label><input id="punchWho" placeholder="Contractor"></div></div><label>Issue</label><input id="punchIssue" placeholder="Touch up trim"><button class="primary" onclick="addItem('punch')">Add Issue</button></div><div class="card"><h3>Open / Completed</h3><div id="punchList"></div></div></section>
+</main>
+<div class="bottom"><button onclick="show('home')">⌂ MyBuild HQ</button></div>
 
-    <div class="card">
-      <h3>Deal Finder</h3>
-      <p>
-        Stay organized while comparing prices and looking for ways to reduce build costs.
-      </p>
-    </div>
-
-  </div>
-</section>
-
-<section class="price">
-
-  <h2>One Purchase. Full Access.</h2>
-
-  <div class="price-number">$19.99</div>
-
-  <p>No monthly subscription. No premium tier.</p>
-
-  <a class="button"
-     href="https://mikah50.gumroad.com/l/mybuild-hq">
-     Get MyBuild HQ
-  </a>
-
-</section>
-
-<footer>
-  © 2026 MyBuild HQ • Your Build. Your Plan. Your HQ.
-</footer>
-
+<script>
+const KEY='mybuildhq_v1';
+const phases=['Planning & permits','Sitework','Foundation','Framing','Roof & dry-in','Rough plumbing','Rough electrical','HVAC','Insulation','Drywall','Interior finishes','Exterior & grading','Final inspections','Walkthrough & closeout'];
+const baseChecks=['Confirm plans and specifications','Confirm permits and required inspections','Verify contractor scope in writing','Track allowances and exclusions','Photograph work before walls are closed','Confirm long-lead materials are ordered','Review each invoice before payment','Document every change order','Test fixtures, doors, windows and equipment','Complete final punch list','Collect warranties and manuals'];
+const questions=['What exactly is included and excluded from this price?','Is this fixed-price, cost-plus, or another structure?','Which allowances are included and what assumptions were used?','Who pulls permits and schedules inspections?','Who supervises the site day to day?','What is the expected start date and build duration?','How are delays and backorders handled?','How are change orders priced and approved?','What is the payment schedule?','Can you provide current insurance information?','What workmanship warranty do you provide?','How are punch-list items and callbacks handled?'];
+let db=JSON.parse(localStorage.getItem(KEY)||'null')||{fields:{},budget:[],decisions:[],quotes:[],materials:[],punch:[],phases:{},checks:{},customChecks:[]};
+function persist(){localStorage.setItem(KEY,JSON.stringify(db));render()}
+function show(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
+function money(n){return '$'+Number(n||0).toLocaleString(undefined,{maximumFractionDigits:0})}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function saveFields(){document.querySelectorAll('[data-field]').forEach(x=>db.fields[x.dataset.field]=x.value);persist();alert('Project saved')}
+function loadFields(){document.querySelectorAll('[data-field]').forEach(x=>x.value=db.fields[x.dataset.field]||'')}
+function addItem(type){
+ if(type==='budget'){let a=+budgetAmt.value;if(!budgetCat.value||!a)return;db.budget.push({cat:budgetCat.value,amt:a,note:budgetNote.value});budgetCat.value=budgetAmt.value=budgetNote.value=''}
+ if(type==='decisions'){if(!decisionName.value)return;db.decisions.push({name:decisionName.value,choice:decisionChoice.value,cost:+decisionCost.value||0,note:decisionNote.value});decisionName.value=decisionChoice.value=decisionCost.value=decisionNote.value=''}
+ if(type==='quotes'){if(!quoteCompany.value)return;db.quotes.push({company:quoteCompany.value,trade:quoteTrade.value,total:+quoteTotal.value||0,note:quoteNote.value});quoteCompany.value=quoteTrade.value=quoteTotal.value=quoteNote.value=''}
+ if(type==='materials'){if(!matName.value)return;db.materials.push({name:matName.value,choice:matChoice.value,budget:+matBudget.value||0,status:matStatus.value});matName.value=matChoice.value=matBudget.value=''}
+ if(type==='punch'){if(!punchIssue.value)return;db.punch.push({area:punchArea.value,who:punchWho.value,issue:punchIssue.value,done:false});punchArea.value=punchWho.value=punchIssue.value=''}
+ persist()
+}
+function del(type,i){db[type].splice(i,1);persist()}
+function togglePunch(i){db.punch[i].done=!db.punch[i].done;persist()}
+function addCustomCheck(){if(!customCheck.value)return;db.customChecks.push(customCheck.value);customCheck.value='';persist()}
+function toggleMap(map,key){db[map][key]=!db[map][key];persist()}
+function render(){
+ loadFields();
+ projectTitle.textContent=db.fields.projectName||'My Home Build';
+ let spent=db.budget.reduce((s,x)=>s+(+x.amt||0),0);spentStat.textContent=money(spent);
+ let done=phases.filter(x=>db.phases[x]).length,pct=Math.round(done/phases.length*100);progressStat.textContent=pct+'%';phaseBar.style.width=pct+'%';phaseText.textContent=done+' of '+phases.length+' phases complete';
+ openStat.textContent=db.punch.filter(x=>!x.done).length;
+ budgetList.innerHTML=db.budget.length?db.budget.map((x,i)=>`<div class="item"><div><strong>${esc(x.cat)} — ${money(x.amt)}</strong><p>${esc(x.note)}</p></div><button class="ghost danger" onclick="del('budget',${i})">Delete</button></div>`).join(''):'<div class="empty">No costs added yet.</div>';
+ decisionList.innerHTML=db.decisions.length?db.decisions.map((x,i)=>`<div class="item"><div><strong>${esc(x.name)} — ${esc(x.choice)}</strong><p>${money(x.cost)} impact · ${esc(x.note)}</p></div><button class="ghost danger" onclick="del('decisions',${i})">Delete</button></div>`).join(''):'<div class="empty">No decisions saved yet.</div>';
+ quoteList.innerHTML=db.quotes.length?db.quotes.map((x,i)=>`<div class="item"><div><strong>${esc(x.company)} — ${money(x.total)}</strong><p>${esc(x.trade)} · ${esc(x.note)}</p></div><button class="ghost danger" onclick="del('quotes',${i})">Delete</button></div>`).join(''):'<div class="empty">No quotes saved yet.</div>';
+ matList.innerHTML=db.materials.length?db.materials.map((x,i)=>`<div class="item"><div><strong>${esc(x.name)} — ${esc(x.status)}</strong><p>${esc(x.choice)} · ${money(x.budget)}</p></div><button class="ghost danger" onclick="del('materials',${i})">Delete</button></div>`).join(''):'<div class="empty">No materials saved yet.</div>';
+ punchList.innerHTML=db.punch.length?db.punch.map((x,i)=>`<div class="check ${x.done?'done':''}"><input type="checkbox" ${x.done?'checked':''} onchange="togglePunch(${i})"><span><strong>${esc(x.area||'Issue')}</strong> — ${esc(x.issue)}<br><small>${esc(x.who)}</small></span><button class="ghost danger" onclick="del('punch',${i})">×</button></div>`).join(''):'<div class="empty">No punch-list issues yet.</div>';
+ phaseList.innerHTML=phases.map(x=>`<label class="check ${db.phases[x]?'done':''}"><input type="checkbox" ${db.phases[x]?'checked':''} onchange="toggleMap('phases',${JSON.stringify(x)})"><span>${esc(x)}</span></label>`).join('');
+ questionList.innerHTML=questions.map(x=>`<div class="check"><span>☐</span><span>${esc(x)}</span></div>`).join('');
+ let all=baseChecks.concat(db.customChecks);checkList.innerHTML=all.map((x,i)=>`<label class="check ${db.checks[x]?'done':''}"><input type="checkbox" ${db.checks[x]?'checked':''} onchange="toggleMap('checks',${JSON.stringify(x)})"><span>${esc(x)}</span></label>`).join('');
+}
+function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);persist();alert('Backup imported')}catch{alert('That backup file could not be read')}};r.readAsText(f)}
+render();
+</script>
 </body>
 </html>
