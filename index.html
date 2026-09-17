@@ -107,5 +107,16 @@ function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'applicat
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);persist();alert('Backup imported')}catch{alert('That backup file could not be read')}};r.readAsText(f)}
 render();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = 'https://ibczfpeffcavrewcpdhf.supabase.co';
+
+const SUPABASE_KEY = const SUPABASE_KEY = 'sb_publishable_zerBMpTKgAy3id6qnLUgYA_T2PDCJwh';
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+</script>
 </body>
 </html>
