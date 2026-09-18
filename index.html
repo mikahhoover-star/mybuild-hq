@@ -35,6 +35,8 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 .check{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}.check input{width:auto;margin-top:3px}.check.done span{text-decoration:line-through;color:var(--muted)}
 .empty{color:var(--muted);font-size:13px;padding:8px 0}.note{font-size:12px;color:var(--muted);line-height:1.45}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:9px max(12px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:30}.bottom button{border:0;background:transparent;color:var(--g);font-weight:800}
 @media(min-width:720px){.grid{grid-template-columns:repeat(4,1fr)}.wrap{padding-top:28px}.hero{padding:30px}.stats{max-width:560px}}
+.landing-features{max-width:900px;margin:18px auto 0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.landing-feature{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px}.landing-feature b{display:block;color:var(--g);margin-bottom:5px}.landing-feature span{font-size:14px;line-height:1.45;color:var(--muted)}.landing-note{max-width:620px;margin:14px auto 0;text-align:center;font-size:13px;line-height:1.5;color:var(--muted)}.site-footer{max-width:900px;margin:30px auto 0;padding-top:20px;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:12px;line-height:1.55}
+@media(max-width:560px){#landingScreen{padding-left:12px!important;padding-right:12px!important}.landing-features{grid-template-columns:1fr}.stats{gap:6px}.stat{padding:10px 7px}.hero h1{font-size:23px}}
 </style>
 </head>
 <body>
@@ -88,6 +90,15 @@ Already purchased?
 </p>
 
 </div>
+
+<div class="landing-features">
+  <div class="landing-feature"><b>💵 Keep the budget visible</b><span>Record build costs and keep important spending information together instead of scattered across notes and messages.</span></div>
+  <div class="landing-feature"><b>🏷️ Compare contractor quotes</b><span>Save contractor, trade, price, scope and notes so you can compare bids without losing the details.</span></div>
+  <div class="landing-feature"><b>🧱 Track selections & decisions</b><span>Keep materials, choices, cost impacts and ordering status organized as your build moves forward.</span></div>
+  <div class="landing-feature"><b>📋 Stay ahead of the build</b><span>Use construction phases, contractor questions, checklists and a punch list from planning through closeout.</span></div>
+</div>
+<p class="landing-note"><strong>Built for homeowners managing a home build.</strong> MyBuild HQ works in your browser. Project entries are stored on the device you use, and the included backup tools let you export a copy of your data.</p>
+<div class="site-footer">MyBuild HQ • Your Build. Your Plan. Your HQ.<br>One-time purchase. No recurring subscription. Checkout and license delivery are handled by Gumroad.</div>
 
 </div>
     <div id="authScreen" style= "display:none;max-width:420px;margin:50px auto;padding:25px;">
