@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://mikahhoover-star.github.io/mybuild-hq/">
 <meta name="twitter:card" content="summary">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"MyBuild HQ","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://mikahhoover-star.github.io/mybuild-hq/","description":"A home-building organizer for budgets, contractor quotes, materials, decisions, construction progress, checklists and punch lists.","offers":{"@type":"Offer","price":"24.99","priceCurrency":"USD"}}
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"MyBuild HQ","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://mikahhoover-star.github.io/mybuild-hq/","description":"A home-building organizer for budgets, contractor quotes, materials, decisions, construction progress, checklists and punch lists.","offers":{"@type":"Offer","price":"19.99","priceCurrency":"USD"}}
 </script>
 <style>
 :root{--g:#173d2b;--g2:#245b42;--bg:#f7f7f2;--card:#fff;--ink:#1b1b1b;--muted:#68706b;--soft:#e5eee8;--line:#dfe5e1;--danger:#a83a32}
@@ -69,17 +69,23 @@ Progress • Questions • Checklists
 
 </p>
 
-<div style="font-size:38px;font-weight:800;margin-bottom:2px;">$24.99</div>
+<div style="font-size:38px;font-weight:800;margin-bottom:2px;">$19.99</div>
 
 <p style="margin:0 0 20px;color:#666;">One-time purchase • No subscription</p>
 
 <button onclick="showPurchase()" style="width:100%;padding:16px;background:#173d2b;color:white;border:0;border-radius:12px;font-size:17px;font-weight:700;">
 
-Get MyBuild HQ →
+Get MyBuild HQ for $19.99 →
 
 </button>
 
 <p style="font-size:14px;margin:16px 0 0;">✓ Full access &nbsp; ✓ One-time payment &nbsp; ✓ Secure checkout</p>
+<div style="margin:20px 0 0;text-align:left;background:#f7f7f2;border-radius:14px;padding:16px;line-height:1.55;font-size:14px;">
+<strong style="color:#173d2b;">How access works</strong><br>
+1. Buy MyBuild HQ through Gumroad.<br>
+2. Return here and create your account or log in.<br>
+3. Paste the license key from your Gumroad receipt once to unlock the dashboard.
+</div>
 
 <p style="margin:22px 0 0;color:#555;">
 
@@ -103,17 +109,17 @@ Already purchased?
 </div>
     <div id="authScreen" style= "display:none;max-width:420px;margin:50px auto;padding:25px;">
 
-  <h1>MyBuild HQ</h1>
+  <h1>Access MyBuild HQ</h1>
 
-  <p>Your Build. Your Plan. Your HQ.</p>
+  <p>Purchased already? Create your account or log in, then verify the license key from your Gumroad receipt.</p>
 
   <input id="authEmail" type="email" placeholder="Email" style="width:100%;padding:14px;margin:8px 0;">
 
   <input id="authPassword" type="password" autocomplete="current-password" placeholder="Password" style="width:100%;padding:14px;margin:8px 0;">
 
-  <button onclick="signUp()" style="width:100%;padding:14px;margin:8px 0;">Create Account</button>
+  <button onclick="signUp()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Create Account</button>
 
-  <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;">Log In</button>
+  <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Log In</button>
 
   <div id="licenseGate" style="display:none;margin-top:18px;padding:18px;border:1px solid #dfe5e1;border-radius:14px;background:#fff;">
     <h3 style="margin:0 0 8px;color:#173d2b;">Unlock MyBuild HQ</h3>
@@ -362,7 +368,7 @@ checkSession();
 
   }
 
-  message.textContent = 'Account created! Check your email to confirm your account.';
+  message.textContent = 'Account created! Check your email to confirm your account, then return here and log in.';
 
 }
 
