@@ -145,6 +145,7 @@ Already purchased?
     <button onclick="pasteLicense()" type="button" style="width:100%;padding:12px;margin:4px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Paste License Key</button>
     <button onclick="verifyLicense()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Unlock MyBuild HQ →</button>
     <p id="licenseMessage" role="status" aria-live="polite" style="font-size:13px;line-height:1.45;"></p>
+    <button type="button" class="ghost" onclick="signOutFromLicenseGate()">Use a Different Account</button>
     <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">Once verified, your purchase is linked to your account. Keep your Gumroad receipt for support.</p>
   </div>
 
@@ -331,6 +332,17 @@ async function hasVerifiedLicense() {
   const { data, error } = await supabaseClient.from('purchase_entitlements')
     .select('status,product_id').eq('user_id',user.id).maybeSingle();
   return !error && data?.status === 'active' && data?.product_id === GUMROAD_PRODUCT_ID;
+}
+async function signOutFromLicenseGate() {
+  const {error}=await supabaseClient.auth.signOut();
+  if(error) {
+    document.getElementById('licenseMessage').textContent='Could not sign out. Try again.';
+    return;
+  }
+  document.getElementById('licenseKey').value='';
+  document.getElementById('authPassword').value='';
+  document.getElementById('licenseGate').style.display='none';
+  document.getElementById('authMessage').textContent='Signed out. Sign in with the email used for your purchase.';
 }
 function showLicenseGate() {
   document.getElementById('landingScreen').style.display = 'none';
