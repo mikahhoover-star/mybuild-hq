@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#173d2b">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#173d2b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>MyBuild HQ | Home Building Budget, Quotes & Project Organizer</title>
@@ -137,7 +139,9 @@ Already purchased?
     <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">Once verified, your purchase is linked to your account. Keep your Gumroad receipt for support.</p>
   </div>
 
-  <p id="authMessage"></p>\n\n  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
+  <p id="authMessage"></p>
+
+  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
 
 </div>
 <div id="appScreen" style="display:none;"> <header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><div style="display:flex;gap:8px"><button class="ghost" onclick="show('home')">HQ</button><button class="ghost" onclick="logOut()">Log Out</button></div></header>
@@ -303,7 +307,7 @@ async function loadCloudProject() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return;
   const { data, error } = await supabaseClient.from('project_data')
-    .select('payload').eq('user_id',user.id).maybeSingle();
+    .select('payload,updated_at').eq('user_id',user.id).maybeSingle();
   if (error) { console.warn('Could not load cloud project', error.message); return; }
   if (!data?.payload) return;
   // Never silently overwrite local project data with a cloud copy.
@@ -312,6 +316,7 @@ async function loadCloudProject() {
   }
   db=data.payload;
   localStorage.setItem(KEY,JSON.stringify(db));
+  localStorage.setItem('mybuildhq_cloud_revision',data.updated_at||'');
   render();loadFields();
 }
 async function saveCloudProject() {
@@ -320,9 +325,29 @@ async function saveCloudProject() {
     alert('Please sign in and verify your purchase before saving to the cloud.');
     return;
   }
-  const { error } = await supabaseClient.from('project_data')
-    .upsert({user_id:user.id,payload:db,updated_at:new Date().toISOString()},{onConflict:'user_id'});
-  alert(error ? 'Cloud save failed: '+error.message : 'Project saved to your account.');
+  // Prevent silently overwriting a cloud copy edited on another device.
+  const { data: remote, error: readError } = await supabaseClient.from('project_data')
+    .select('updated_at').eq('user_id',user.id).maybeSingle();
+  if (readError) { alert('Could not check the cloud copy. Try again later.'); return; }
+  const knownRevision = localStorage.getItem('mybuildhq_cloud_revision');
+  if (remote && (!knownRevision || remote.updated_at !== knownRevision)) {
+    alert('A different cloud version exists. Export a backup, then use Load Account Copy to review it before saving.');
+    return;
+  }
+  const revision = new Date().toISOString();
+  let query;
+  if (remote) {
+    query = supabaseClient.from('project_data')
+      .update({payload:db,updated_at:revision})
+      .eq('user_id',user.id).eq('updated_at',remote.updated_at).select('updated_at').maybeSingle();
+  } else {
+    query = supabaseClient.from('project_data')
+      .insert({user_id:user.id,payload:db,updated_at:revision}).select('updated_at').maybeSingle();
+  }
+  const { data: saved, error } = await query;
+  if (error || !saved) { alert('Cloud save did not complete. Your browser copy is still here.'); return; }
+  localStorage.setItem('mybuildhq_cloud_revision',saved.updated_at);
+  alert('Project saved to your account.');
 }
 async function pasteLicense() {
   const message = document.getElementById('licenseMessage');
