@@ -297,6 +297,20 @@ function showLicenseGate() {
   document.getElementById('authMessage').textContent = 'Please verify your purchase to continue.';
 }
 async function openDashboard() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return;
+  const previousOwner = localStorage.getItem('mybuildhq_local_owner');
+  if (previousOwner && previousOwner !== user.id) {
+    // Keep another account's project out of this account's session.
+    alert('This browser has data from another account. Export its backup from that account before switching.');
+    await supabaseClient.auth.signOut();
+    backToLanding();
+    return;
+  }
+  if (!previousOwner) {
+    // Existing pre-account local projects remain with the first signed-in owner.
+    localStorage.setItem('mybuildhq_local_owner',user.id);
+  }
   document.getElementById('landingScreen').style.display = 'none';
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('licenseGate').style.display = 'none';
