@@ -43,7 +43,7 @@ Deno.serve(async (request) => {
     if (!verification.ok) return respond(403, 'License verification failed');
     const result = await verification.json();
     const purchase = result?.purchase;
-    if (!result?.success || !purchase || purchase.refunded || purchase.disputed ||
+    if (!result?.success || !purchase || (purchase.product_id && purchase.product_id !== productId) || purchase.refunded || purchase.disputed ||
         purchase.chargebacked || purchase.subscription_cancelled_at) {
       return respond(403, 'This purchase is not eligible for access');
     }
@@ -55,6 +55,7 @@ Deno.serve(async (request) => {
     const saleId = String(purchase.id || '');
     if (!saleId) return respond(403, 'Purchase record is incomplete');
     const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
+    // Never store the raw license key in the database or browser.
     // A sale ID is unique; a reused key cannot be claimed by a different account.
     const { error } = await admin.from('purchase_entitlements').upsert({
       user_id: user.id,
