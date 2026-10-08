@@ -9,6 +9,8 @@ const headers = {
   'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Content-Type': 'application/json',
+  'Cache-Control': 'no-store',
+  'Vary': 'Origin',
 };
 function respond(status: number, message: string) {
   return new Response(JSON.stringify({ message }), { status, headers });
@@ -39,6 +41,7 @@ Deno.serve(async (request) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: form,
+      signal: AbortSignal.timeout(10000),
     });
     if (!verification.ok) return respond(403, 'License verification failed');
     const result = await verification.json();
