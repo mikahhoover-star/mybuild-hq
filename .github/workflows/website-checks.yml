@@ -12,3 +12,4 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/check-site.mjs
+      - run: node scripts/security-regression.mjs
