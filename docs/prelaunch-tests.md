@@ -50,3 +50,13 @@ Run these tests on a staging Supabase project before merging PR #4.
 - [ ] Invalid JSON backup containing null entries, wrong field types, or excessively long custom checklist items is rejected without replacing browser data.
 - [ ] A cloud save from another device triggers a revision conflict rather than overwriting silently.
 - [ ] Only one app script and one auth script exist in the generated HTML.
+
+## Shared browser and license recovery
+
+- [ ] A signed-in user without an entitlement can sign out from the license gate.
+- [ ] A buyer can sign in with the purchase email after signing out of a different account.
+- [ ] A shared-device user can export the browser backup before intentionally clearing local data.
+- [ ] Canceling either clear-data confirmation preserves the browser project and its owner.
+- [ ] Clearing browser data does not delete any cloud project or entitlement.
+- [ ] A refund/chargeback is reflected in the entitlement status after backend reconciliation; do not claim automatic revocation before this exists.
+- [ ] Gumroad verification times out gracefully during API outages.
