@@ -46,6 +46,7 @@ with check (
   and exists (
     select 1 from public.purchase_entitlements e
     where e.user_id = (select auth.uid()) and e.status = 'active'
+      and e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='
   )
 );
 drop policy if exists "Update own paid project" on public.project_data;
@@ -56,6 +57,7 @@ using (
   and exists (
     select 1 from public.purchase_entitlements e
     where e.user_id = (select auth.uid()) and e.status = 'active'
+      and e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='
   )
 )
 with check (
@@ -63,6 +65,7 @@ with check (
   and exists (
     select 1 from public.purchase_entitlements e
     where e.user_id = (select auth.uid()) and e.status = 'active'
+      and e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='
   )
 );
 drop policy if exists "Delete own paid project" on public.project_data;
@@ -73,5 +76,6 @@ using (
   and exists (
     select 1 from public.purchase_entitlements e
     where e.user_id = (select auth.uid()) and e.status = 'active'
+      and e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='
   )
 );
