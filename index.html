@@ -357,24 +357,36 @@ async function openDashboard() {
   document.getElementById('appScreen').style.display = 'block';
   await loadCloudProject();
 }
+function cloudRevisionKey(userId) { return 'mybuildhq_cloud_revision_' + userId; }
+function hasLocalProject() {
+  try {
+    const local=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(!validProject(local)) return false;
+    return Object.keys(local.fields).length>0 ||
+      ['budget','decisions','quotes','materials','punch','customChecks'].some(k=>local[k].length>0) ||
+      Object.keys(local.phases).length>0 || Object.keys(local.checks).length>0;
+  } catch { return false; }
+}
 async function loadCloudProject() {
   const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) return;
+  if (!user || !(await hasVerifiedLicense())) return;
   const { data, error } = await supabaseClient.from('project_data')
     .select('payload,updated_at').eq('user_id',user.id).maybeSingle();
-  if (error) { console.warn('Could not load cloud project', error.message); return; }
+  if (error) { alert('Cloud project could not be loaded. Your browser data is unchanged.'); return; }
   if (!data?.payload) return;
   if (!validProject(data.payload)) {
-    alert('The cloud project could not be loaded because its format is invalid. Your browser data is unchanged.');
+    alert('The cloud project format is invalid. Your browser data is unchanged.');
     return;
   }
-  // Never silently overwrite local project data with a cloud copy.
-  if (localStorage.getItem(KEY) && localStorage.getItem(KEY) !== JSON.stringify(data.payload)) {
-    if (!confirm('A cloud project was found. Replace this browser\'s project with the cloud copy? Choose Cancel to keep this browser\'s data and export a backup first.')) return;
+  // Compare content, not raw JSON strings, and never discard meaningful local edits.
+  const localContent=JSON.stringify(db);
+  const remoteContent=JSON.stringify(data.payload);
+  if (hasLocalProject() && localContent!==remoteContent) {
+    if (!confirm('A cloud project was found. Replace this browser\'s project with the cloud copy? Choose Cancel to export a backup first.')) return;
   }
   db=data.payload;
   localStorage.setItem(KEY,JSON.stringify(db));
-  localStorage.setItem('mybuildhq_cloud_revision',data.updated_at||'');
+  localStorage.setItem(cloudRevisionKey(user.id),data.updated_at||'');
   render();loadFields();
 }
 async function saveCloudProject() {
@@ -383,28 +395,29 @@ async function saveCloudProject() {
     alert('Please sign in and verify your purchase before saving to the cloud.');
     return;
   }
-  // Prevent silently overwriting a cloud copy edited on another device.
   const { data: remote, error: readError } = await supabaseClient.from('project_data')
     .select('updated_at').eq('user_id',user.id).maybeSingle();
   if (readError) { alert('Could not check the cloud copy. Try again later.'); return; }
-  const knownRevision = localStorage.getItem('mybuildhq_cloud_revision');
-  if (remote && (!knownRevision || remote.updated_at !== knownRevision)) {
-    alert('A different cloud version exists. Export a backup, then use Load Account Copy to review it before saving.');
+  const knownRevision=localStorage.getItem(cloudRevisionKey(user.id));
+  if (remote && (!knownRevision || remote.updated_at!==knownRevision)) {
+    alert('A different cloud version exists. Export a backup, then load and review the account copy.');
     return;
   }
-  const revision = new Date().toISOString();
-  let query;
-  if (remote) {
-    query = supabaseClient.from('project_data')
-      .update({payload:db,updated_at:revision})
-      .eq('user_id',user.id).eq('updated_at',remote.updated_at).select('updated_at').maybeSingle();
-  } else {
-    query = supabaseClient.from('project_data')
-      .insert({user_id:user.id,payload:db,updated_at:revision}).select('updated_at').maybeSingle();
-  }
+  const revision=new Date().toISOString();
+  const query=remote
+    ? supabaseClient.from('project_data')
+        .update({payload:db,updated_at:revision})
+        .eq('user_id',user.id).eq('updated_at',remote.updated_at)
+        .select('updated_at').maybeSingle()
+    : supabaseClient.from('project_data')
+        .insert({user_id:user.id,payload:db,updated_at:revision})
+        .select('updated_at').maybeSingle();
   const { data: saved, error } = await query;
-  if (error || !saved) { alert('Cloud save did not complete. Your browser copy is still here.'); return; }
-  localStorage.setItem('mybuildhq_cloud_revision',saved.updated_at);
+  if (error || !saved) {
+    alert('Cloud save did not complete. Your browser copy is still here.');
+    return;
+  }
+  localStorage.setItem(cloudRevisionKey(user.id),saved.updated_at);
   alert('Project saved to your account.');
 }
 async function pasteLicense() {
