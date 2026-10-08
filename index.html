@@ -123,6 +123,8 @@ Already purchased?
 
   <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Log In</button>
 
+  <button onclick="resetPassword()" type="button" style="width:100%;padding:12px;margin:4px 0;border:0;background:transparent;color:#173d2b;text-decoration:underline;">Forgot password? Send reset email</button>
+
   <div id="licenseGate" style="display:none;margin-top:18px;padding:18px;border:1px solid #dfe5e1;border-radius:14px;background:#fff;">
     <h3 style="margin:0 0 8px;color:#173d2b;">Unlock MyBuild HQ</h3>
     <p style="font-size:14px;color:#68706b;line-height:1.5;margin-bottom:12px;">If Gumroad issued a <strong>license key</strong> for your purchase, paste it below to unlock MyBuild HQ. If your receipt has no key, contact the seller for help accessing your existing purchase. You do not need to buy again.</p>
@@ -434,6 +436,25 @@ checkSession();
 
 }
 
+async function resetPassword() {
+  const email = document.getElementById('authEmail').value.trim();
+  const message = document.getElementById('authMessage');
+  if (!email) { message.textContent = 'Enter your account email first.'; return; }
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://mikahhoover-star.github.io/mybuild-hq/'
+  });
+  message.textContent = error ? 'Could not send a reset email. Try again shortly.' : 'If this email has an account, check your inbox for a password reset link.';
+}
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event !== 'PASSWORD_RECOVERY') return;
+  setTimeout(async () => {
+    const next = prompt('Enter your new password (at least 8 characters):');
+    if (!next) return;
+    if (next.length < 8) { alert('Use at least 8 characters.'); return; }
+    const { error } = await supabaseClient.auth.updateUser({password:next});
+    alert(error ? 'Password could not be changed. Please retry.' : 'Password updated. You can now log in.');
+  },0);
+});
 async function signIn() {
 
   const email = document.getElementById('authEmail').value.trim();
