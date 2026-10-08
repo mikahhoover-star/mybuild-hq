@@ -142,11 +142,11 @@ Already purchased?
     <input id="licenseKey" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your license key here" style="width:100%;padding:14px;margin:8px 0;">
     <button onclick="pasteLicense()" type="button" style="width:100%;padding:12px;margin:4px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Paste License Key</button>
     <button onclick="verifyLicense()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Unlock MyBuild HQ →</button>
-    <p id="licenseMessage" style="font-size:13px;line-height:1.45;"></p>
+    <p id="licenseMessage" role="status" aria-live="polite" style="font-size:13px;line-height:1.45;"></p>
     <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">Once verified, your purchase is linked to your account. Keep your Gumroad receipt for support.</p>
   </div>
 
-  <p id="authMessage"></p>
+  <p id="authMessage" role="status" aria-live="polite"></p>
 
   <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
 
@@ -309,10 +309,14 @@ async function openDashboard() {
   if (!user) return;
   const previousOwner = localStorage.getItem('mybuildhq_local_owner');
   if (previousOwner && previousOwner !== user.id) {
-    // Keep another account's project out of this account's session.
-    alert('This browser has data from another account. Export its backup from that account before switching.');
+    // Never show the previous account's local project to a different user.
+    // Sign out; the previous owner can log back in and export their backup.
     await supabaseClient.auth.signOut();
-    backToLanding();
+    document.getElementById('appScreen').style.display = 'none';
+    document.getElementById('authScreen').style.display = 'block';
+    document.getElementById('landingScreen').style.display = 'none';
+    document.getElementById('authMessage').textContent =
+      'This browser contains another account\'s project. Sign in as that account to export a backup before switching accounts.';
     return;
   }
   if (!previousOwner) {
