@@ -213,7 +213,348 @@ function initialProject() {
 let db=initialProject();
 function persist(){localStorage.setItem(KEY,JSON.stringify(db));render()}
 function show(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
-function money(n){return '$'+Number(n||0).toLocaleString(undefined,{maximumFractionDigits:0})}
+function money(n){const value=Number(n);return '
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function saveFields(){document.querySelectorAll('[data-field]').forEach(x=>db.fields[x.dataset.field]=x.value);persist();alert('Project saved')}
+function loadFields(){document.querySelectorAll('[data-field]').forEach(x=>x.value=db.fields[x.dataset.field]||'')}
+function addItem(type){
+ if(type==='budget'){let a=+budgetAmt.value;if(!budgetCat.value||!Number.isFinite(a)||a<=0){alert('Enter a category and a cost greater than zero.');return;}db.budget.push({cat:budgetCat.value,amt:a,note:budgetNote.value});budgetCat.value=budgetAmt.value=budgetNote.value=''}
+ if(type==='decisions'){if(!decisionName.value.trim())return;db.decisions.push({name:decisionName.value,choice:decisionChoice.value,cost:+decisionCost.value||0,note:decisionNote.value});decisionName.value=decisionChoice.value=decisionCost.value=decisionNote.value=''}
+ if(type==='quotes'){if(!quoteCompany.value.trim()||!Number.isFinite(+quoteTotal.value)||+quoteTotal.value<0){alert('Enter a contractor and a valid quote amount.');return;}db.quotes.push({company:quoteCompany.value,trade:quoteTrade.value,total:+quoteTotal.value||0,note:quoteNote.value});quoteCompany.value=quoteTrade.value=quoteTotal.value=quoteNote.value=''}
+ if(type==='materials'){if(!matName.value.trim()||!Number.isFinite(+matBudget.value)||+matBudget.value<0){alert('Enter a material and a valid budget amount.');return;}db.materials.push({name:matName.value,choice:matChoice.value,budget:+matBudget.value||0,status:matStatus.value});matName.value=matChoice.value=matBudget.value=''}
+ if(type==='punch'){if(!punchIssue.value.trim())return;db.punch.push({area:punchArea.value,who:punchWho.value,issue:punchIssue.value,done:false});punchArea.value=punchWho.value=punchIssue.value=''}
+ persist()
+}
+function del(type,i){if(!confirm('Delete this item?'))return;db[type].splice(i,1);persist()}
+function togglePunch(i){db.punch[i].done=!db.punch[i].done;persist()}
+function addCustomCheck(){const label=customCheck.value.trim();if(!label)return;if(label.length>300||baseChecks.includes(label)||db.customChecks.includes(label)){alert('Use a unique checklist item under 300 characters.');return;}db.customChecks.push(label);customCheck.value='';persist()}
+function toggleMap(map,key){db[map][key]=!db[map][key];persist()}
+function render(){
+ projectTitle.textContent=db.fields.projectName||'My Home Build';
+ let spent=db.budget.reduce((s,x)=>s+(+x.amt||0),0);spentStat.textContent=money(spent);
+ let done=phases.filter(x=>db.phases[x]).length,pct=Math.round(done/phases.length*100);progressStat.textContent=pct+'%';phaseBar.style.width=pct+'%';phaseText.textContent=done+' of '+phases.length+' phases complete';
+ openStat.textContent=db.punch.filter(x=>!x.done).length;
+ budgetList.innerHTML=db.budget.length?db.budget.map((x,i)=>`<div class="item"><div><strong>${esc(x.cat)} — ${money(x.amt)}</strong><p>${esc(x.note)}</p></div><button class="ghost danger" onclick="del('budget',${i})">Delete</button></div>`).join(''):'<div class="empty">No costs added yet.</div>';
+ decisionList.innerHTML=db.decisions.length?db.decisions.map((x,i)=>`<div class="item"><div><strong>${esc(x.name)} — ${esc(x.choice)}</strong><p>${money(x.cost)} impact · ${esc(x.note)}</p></div><button class="ghost danger" onclick="del('decisions',${i})">Delete</button></div>`).join(''):'<div class="empty">No decisions saved yet.</div>';
+ quoteList.innerHTML=db.quotes.length?db.quotes.map((x,i)=>`<div class="item"><div><strong>${esc(x.company)} — ${money(x.total)}</strong><p>${esc(x.trade)} · ${esc(x.note)}</p></div><button class="ghost danger" onclick="del('quotes',${i})">Delete</button></div>`).join(''):'<div class="empty">No quotes saved yet.</div>';
+ matList.innerHTML=db.materials.length?db.materials.map((x,i)=>`<div class="item"><div><strong>${esc(x.name)} — ${esc(x.status)}</strong><p>${esc(x.choice)} · ${money(x.budget)}</p></div><button class="ghost danger" onclick="del('materials',${i})">Delete</button></div>`).join(''):'<div class="empty">No materials saved yet.</div>';
+ punchList.innerHTML=db.punch.length?db.punch.map((x,i)=>`<div class="check ${x.done?'done':''}"><input type="checkbox" ${x.done?'checked':''} onchange="togglePunch(${i})"><span><strong>${esc(x.area||'Issue')}</strong> — ${esc(x.issue)}<br><small>${esc(x.who)}</small></span><button class="ghost danger" onclick="del('punch',${i})">×</button></div>`).join(''):'<div class="empty">No punch-list issues yet.</div>';
+ phaseList.innerHTML=phases.map((x,i)=>`<label class="check ${db.phases[x]?'done':''}"><input type="checkbox" ${db.phases[x]?'checked':''} data-phase-index="${i}"><span>${esc(x)}</span></label>`).join('');
+ phaseList.querySelectorAll('[data-phase-index]').forEach(input=>input.addEventListener('change',()=>toggleMap('phases',phases[Number(input.dataset.phaseIndex)])));
+ questionList.innerHTML=questions.map(x=>`<div class="check"><span>☐</span><span>${esc(x)}</span></div>`).join('');
+ let all=baseChecks.concat(db.customChecks);checkList.innerHTML=all.map((x,i)=>`<label class="check ${db.checks[x]?'done':''}"><input type="checkbox" ${db.checks[x]?'checked':''} data-check-index="${i}"><span>${esc(x)}</span></label>`).join('');
+ checkList.querySelectorAll('[data-check-index]').forEach(input=>input.addEventListener('change',()=>toggleMap('checks',all[Number(input.dataset.checkIndex)])));
+}
+
+function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){
+ const f=e.target.files[0];if(!f)return;
+ if(f.size>5*1024*1024){alert('Backup exceeds the 5 MB import limit.');e.target.value='';return;}
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const imported=JSON.parse(r.result);
+   if(!validProject(imported)) throw new Error('Invalid backup');
+   if(!confirm('Import this backup? It will replace the project saved in this browser. Export your current backup first if needed.'))return;
+   db=imported;persist();loadFields();alert('Backup imported');
+  }catch{alert('This file is not a valid MyBuild HQ backup.')}
+  finally{e.target.value='';}
+ };
+ r.readAsText(f);
+}
+render();
+loadFields();
+// Preserve project field edits immediately, including when navigating away.
+document.querySelectorAll('[data-field]').forEach(field => {
+  field.addEventListener('input', () => {
+    db.fields[field.dataset.field] = field.value;
+    localStorage.setItem(KEY, JSON.stringify(db));
+    if (field.dataset.field === 'projectName') {
+      projectTitle.textContent = field.value || 'My Home Build';
+    }
+  });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = 'https://ibczfpeffcavrewcpdhf.supabase.co';
+
+const SUPABASE_KEY = 'sb_publishable_zerBMpTKgAy3id6qnLUgYA_T2PDCJwh';
+const GUMROAD_PRODUCT_ID = 'TDVYHTW6fumm_w_qSr5rcQ==';
+// Access is determined by server-managed Supabase entitlements, never browser storage.
+
+const supabaseClient =supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+function showPurchase() {
+
+  window.location.href = 'https://mikah50.gumroad.com/l/mybuild-hq';
+
+}
+function showLogin() {
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('passwordRecovery').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'block';
+}
+function backToLanding() {
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('passwordRecovery').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'block';
+  document.getElementById('authMessage').textContent = '';
+}
+async function logOut() {
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    alert('Could not log out: ' + error.message);
+    return;
+  }
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('passwordRecovery').style.display = 'none';
+  document.getElementById('landingScreen').style.display = 'block';
+  show('home');
+}
+async function hasVerifiedLicense() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return false;
+  const { data, error } = await supabaseClient.from('purchase_entitlements')
+    .select('status,product_id').eq('user_id',user.id).maybeSingle();
+  return !error && data?.status === 'active' && data?.product_id === GUMROAD_PRODUCT_ID;
+}
+function showLicenseGate() {
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'block';
+  document.getElementById('licenseGate').style.display = 'block';
+  document.getElementById('authMessage').textContent = 'Please verify your purchase to continue.';
+}
+async function openDashboard() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return;
+  const previousOwner = localStorage.getItem('mybuildhq_local_owner');
+  if (previousOwner && previousOwner !== user.id) {
+    // Never show the previous account's local project to a different user.
+    // Sign out; the previous owner can log back in and export their backup.
+    await supabaseClient.auth.signOut();
+    document.getElementById('appScreen').style.display = 'none';
+    document.getElementById('authScreen').style.display = 'block';
+    document.getElementById('landingScreen').style.display = 'none';
+    document.getElementById('authMessage').textContent =
+      'This browser contains another account\'s project. Sign in as that account to export a backup before switching accounts.';
+    return;
+  }
+  if (!previousOwner) {
+    // Existing pre-account local projects remain with the first signed-in owner.
+    localStorage.setItem('mybuildhq_local_owner',user.id);
+  }
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  await loadCloudProject();
+}
+function cloudRevisionKey(userId) { return 'mybuildhq_cloud_revision_' + userId; }
+function hasLocalProject() {
+  try {
+    const local=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(!validProject(local)) return false;
+    return Object.keys(local.fields).length>0 ||
+      ['budget','decisions','quotes','materials','punch','customChecks'].some(k=>local[k].length>0) ||
+      Object.keys(local.phases).length>0 || Object.keys(local.checks).length>0;
+  } catch { return false; }
+}
+async function loadCloudProject() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user || !(await hasVerifiedLicense())) return;
+  const { data, error } = await supabaseClient.from('project_data')
+    .select('payload,updated_at').eq('user_id',user.id).maybeSingle();
+  if (error) { alert('Cloud project could not be loaded. Your browser data is unchanged.'); return; }
+  if (!data?.payload) return;
+  if (!validProject(data.payload)) {
+    alert('The cloud project format is invalid. Your browser data is unchanged.');
+    return;
+  }
+  // Compare content, not raw JSON strings, and never discard meaningful local edits.
+  const localContent=JSON.stringify(db);
+  const remoteContent=JSON.stringify(data.payload);
+  if (hasLocalProject() && localContent!==remoteContent) {
+    if (!confirm('A cloud project was found. Replace this browser\'s project with the cloud copy? Choose Cancel to export a backup first.')) return;
+  }
+  db=data.payload;
+  localStorage.setItem(KEY,JSON.stringify(db));
+  localStorage.setItem(cloudRevisionKey(user.id),data.updated_at||'');
+  render();loadFields();
+}
+async function saveCloudProject() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user || !(await hasVerifiedLicense())) {
+    alert('Please sign in and verify your purchase before saving to the cloud.');
+    return;
+  }
+  const { data: remote, error: readError } = await supabaseClient.from('project_data')
+    .select('updated_at').eq('user_id',user.id).maybeSingle();
+  if (readError) { alert('Could not check the cloud copy. Try again later.'); return; }
+  const knownRevision=localStorage.getItem(cloudRevisionKey(user.id));
+  if (remote && (!knownRevision || remote.updated_at!==knownRevision)) {
+    alert('A different cloud version exists. Export a backup, then load and review the account copy.');
+    return;
+  }
+  const revision=new Date().toISOString();
+  const query=remote
+    ? supabaseClient.from('project_data')
+        .update({payload:db,updated_at:revision})
+        .eq('user_id',user.id).eq('updated_at',remote.updated_at)
+        .select('updated_at').maybeSingle()
+    : supabaseClient.from('project_data')
+        .insert({user_id:user.id,payload:db,updated_at:revision})
+        .select('updated_at').maybeSingle();
+  const { data: saved, error } = await query;
+  if (error || !saved) {
+    alert('Cloud save did not complete. Your browser copy is still here.');
+    return;
+  }
+  localStorage.setItem(cloudRevisionKey(user.id),saved.updated_at);
+  alert('Project saved to your account.');
+}
+async function pasteLicense() {
+  const message = document.getElementById('licenseMessage');
+  try {
+    const text = await navigator.clipboard.readText();
+    if (!text) {
+      message.textContent = 'Nothing was found on your clipboard. Copy the license key from Gumroad first.';
+      return;
+    }
+    document.getElementById('licenseKey').value = text.trim();
+    message.textContent = 'License key pasted. Tap Unlock MyBuild HQ.';
+  } catch {
+    document.getElementById('licenseKey').focus();
+    message.textContent = 'Press and hold in the box, then tap Paste.';
+  }
+}
+async function verifyLicense() {
+  const key = document.getElementById('licenseKey').value.trim();
+  const message = document.getElementById('licenseMessage');
+  if (!key) { message.textContent = 'Enter your Gumroad license key.'; return; }
+  message.textContent = 'Verifying purchase...';
+  try {
+    const { data, error } = await supabaseClient.functions.invoke('verify-gumroad-license', {
+      body: {license_key:key}
+    });
+    if (error) throw error;
+    if (!(await hasVerifiedLicense())) throw new Error('Entitlement not found');
+    document.getElementById('licenseKey').value = '';
+    message.textContent = 'Purchase verified!';
+    await openDashboard();
+  } catch {
+    message.textContent = 'Purchase could not be verified. Check the license and purchase email, or contact support.';
+  }
+}
+async function checkSession() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) return;
+  if (!(await hasVerifiedLicense())) { showLicenseGate(); return; }
+  await openDashboard();
+}
+
+checkSession();
+  async function signUp() {
+
+  const email = document.getElementById('authEmail').value.trim();
+
+  const password = document.getElementById('authPassword').value;
+
+  const message = document.getElementById('authMessage');
+
+  message.textContent = 'Creating account...';
+
+  const { data, error } = await supabaseClient.auth.signUp({
+
+    email: email,
+
+    password: password,
+    options: { emailRedirectTo: 'https://mikahhoover-star.github.io/mybuild-hq/' }
+  });
+
+  if (error) {
+
+    message.textContent = error.message;
+
+    return;
+
+  }
+
+  message.textContent = 'Account created! Check your email to confirm your account, then return here and log in.';
+
+}
+
+async function resetPassword() {
+  const email = document.getElementById('authEmail').value.trim();
+  const message = document.getElementById('authMessage');
+  if (!email) { message.textContent = 'Enter your account email first.'; return; }
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://mikahhoover-star.github.io/mybuild-hq/'
+  });
+  message.textContent = error ? 'Could not send a reset email. Try again shortly.' : 'If this email has an account, check your inbox for a password reset link.';
+}
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event !== 'PASSWORD_RECOVERY') return;
+  document.getElementById('landingScreen').style.display='none';
+  document.getElementById('authScreen').style.display='block';
+  document.getElementById('passwordRecovery').style.display='block';
+  document.getElementById('authMessage').textContent='Choose a new password below.';
+});
+async function finishPasswordReset() {
+  const password = document.getElementById('newPassword').value;
+  const message = document.getElementById('authMessage');
+  if (password.length < 8) { message.textContent='Use at least 8 characters.'; return; }
+  const { error } = await supabaseClient.auth.updateUser({password});
+  message.textContent=error ? 'Could not update password. Try again.' : 'Password updated. Please log in.';
+  if (!error) {
+    document.getElementById('newPassword').value='';
+    document.getElementById('passwordRecovery').style.display='none';
+    await supabaseClient.auth.signOut();
+  }
+}
+async function signIn() {
+
+  const email = document.getElementById('authEmail').value.trim();
+
+  const password = document.getElementById('authPassword').value;
+
+  const message = document.getElementById('authMessage');
+
+  message.textContent = 'Logging in...';
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+
+    email: email,
+
+    password: password
+
+  });
+
+  if (error) {
+
+    message.textContent = error.message;
+
+    return;
+
+  }
+
+  message.textContent = 'Logged in successfully!';
+  if (!(await hasVerifiedLicense())) {
+    showLicenseGate();
+    return;
+  }
+  await openDashboard();
+}
+</script>
+</body>
+</html>+(Number.isFinite(value)?value:0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function saveFields(){document.querySelectorAll('[data-field]').forEach(x=>db.fields[x.dataset.field]=x.value);persist();alert('Project saved')}
 function loadFields(){document.querySelectorAll('[data-field]').forEach(x=>x.value=db.fields[x.dataset.field]||'')}
