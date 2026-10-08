@@ -8,7 +8,7 @@ const html=readFileSync('index.html','utf8');
 const scripts=[...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(m=>!m[1].includes('application/ld+json'))
   .map(m=>m[2]).filter(x=>x.trim());
-assert.ok(scripts.length>=2,'Expected app and auth scripts');
+assert.equal(scripts.length,2,'Expected exactly one app script and one auth script');
 const dir=mkdtempSync(join(tmpdir(),'mybuildhq-check-'));
 try {
   for(let i=0;i<scripts.length;i++){
@@ -55,11 +55,15 @@ assert.ok(html.includes('Number.isFinite(a)'),'Budget values must be validated')
 assert.ok(html.includes("confirm('Delete this item?')"),'Destructive deletion must ask for confirmation');
 assert.ok(readFileSync('supabase/config.toml','utf8').includes('verify_jwt = true'),
   'Purchase function must require JWT verification');
-assert.ok(migration.includes("e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='"),
-  'RLS must scope entitlement to MyBuild HQ product');
+assert.equal(migration.split("e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='").length-1,5,
+  'Every read and write RLS policy must require the correct paid product');
 console.log('Extended regression checks passed');
 
 assert.ok(html.includes('minimumFractionDigits:2'), 'Financial values must show cents');
 assert.ok(html.includes('Use a unique checklist item under 300 characters.'), 'Duplicate checklist guard required');
 assert.ok(html.includes("['checks','phases'].includes(map)"), 'Checklist toggle must validate target');
 console.log('Financial and checklist checks passed');
+
+assert.equal((html.match(/<\/html>/gi)||[]).length,1,'Exactly one HTML document closing tag required');
+assert.equal((html.match(/const SUPABASE_URL =/g)||[]).length,1,'Supabase auth script must not be duplicated');
+console.log('Document integrity checks passed');
