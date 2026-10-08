@@ -225,10 +225,10 @@ function addItem(type){
  if(type==='punch'){if(!punchIssue.value.trim())return;db.punch.push({area:punchArea.value,who:punchWho.value,issue:punchIssue.value,done:false});punchArea.value=punchWho.value=punchIssue.value=''}
  persist()
 }
-function del(type,i){if(!confirm('Delete this item?'))return;db[type].splice(i,1);persist()}
-function togglePunch(i){db.punch[i].done=!db.punch[i].done;persist()}
+function del(type,i){if(!['budget','decisions','quotes','materials','punch'].includes(type)||!Number.isInteger(i)||i<0||i>=db[type].length)return;if(!confirm('Delete this item?'))return;db[type].splice(i,1);persist()}
+function togglePunch(i){if(!Number.isInteger(i)||i<0||i>=db.punch.length)return;db.punch[i].done=!db.punch[i].done;persist()}
 function addCustomCheck(){const label=customCheck.value.trim();if(!label)return;if(label.length>300||baseChecks.includes(label)||db.customChecks.includes(label)){alert('Use a unique checklist item under 300 characters.');return;}db.customChecks.push(label);customCheck.value='';persist()}
-function toggleMap(map,key){db[map][key]=!db[map][key];persist()}
+function toggleMap(map,key){if(!['checks','phases'].includes(map)||typeof key!=='string'||!key||['__proto__','constructor','prototype'].includes(key))return;db[map][key]=!db[map][key];persist()}
 function render(){
  projectTitle.textContent=db.fields.projectName||'My Home Build';
  let spent=db.budget.reduce((s,x)=>s+(+x.amt||0),0);spentStat.textContent=money(spent);
