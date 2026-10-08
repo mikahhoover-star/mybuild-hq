@@ -28,3 +28,12 @@ const escapeCode=slice('function esc(s)','function saveFields()');
 assert.equal(runInNewContext(escapeCode+';esc(value)',{value:'<img src=x onerror=alert(1)>'}),
   '&lt;img src=x onerror=alert(1)&gt;');
 console.log('Project validation, money and escaping regression tests passed');
+
+const edge=readFileSync('supabase/functions/verify-gumroad-license/index.ts','utf8');
+assert.ok(edge.includes('AbortSignal.timeout(10000)'),'Gumroad verification must time out');
+assert.ok(edge.includes("'Cache-Control': 'no-store'"),'Purchase responses must not be cached');
+assert.ok(edge.includes("auth.auth.getUser(token)"),'Edge Function must verify user token');
+assert.ok(edge.includes("purchase.email"),'Purchase must be bound to buyer email');
+assert.ok(edge.includes("purchase.refunded"),'Refunded purchases must fail verification');
+assert.ok(edge.includes("increment_uses_count: 'false'"),'Verification must not consume license uses');
+console.log('Purchase verification source checks passed');
