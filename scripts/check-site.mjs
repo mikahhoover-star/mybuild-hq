@@ -67,3 +67,11 @@ console.log('Financial and checklist checks passed');
 assert.equal((html.match(/<\/html>/gi)||[]).length,1,'Exactly one HTML document closing tag required');
 assert.equal((html.match(/const SUPABASE_URL =/g)||[]).length,1,'Supabase auth script must not be duplicated');
 console.log('Document integrity checks passed');
+
+assert.ok(html.includes('function clearBrowserProjectForAccountSwitch()'),
+  'Shared devices need an explicit safe account switching path');
+assert.ok(html.includes('Export Browser Backup'),
+  'Offer a backup before browser data clearing');
+assert.ok(html.includes('function signOutFromLicenseGate()'),
+  'Unlicensed accounts must be able to sign out');
+console.log('Account switching checks passed');
