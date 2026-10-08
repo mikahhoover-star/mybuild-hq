@@ -78,6 +78,7 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 .customer-access #licenseGate{background:#fafcf9!important;border-color:#dce8dd!important}.customer-access #authMessage,.customer-access #licenseMessage{font-size:13px;color:#365942;line-height:1.5}
 @media(max-width:850px){.marketing-nav{gap:8px}.marketing-links{gap:10px;font-size:12px}.marketing-brand-image{width:50px;height:50px}.marketing-brand .brand-word{font-size:22px}.marketing-nav-actions{gap:5px}.marketing-nav-actions .marketing-cta{padding:12px 14px}.marketing-login{padding:10px 13px}.marketing-hero-content{width:62%}.marketing-hero-image{left:54%}}
 @media(max-width:600px){.marketing-nav{height:76px}.marketing-brand-image{width:45px;height:45px}.marketing-brand .brand-word{font-size:20px}.marketing-login{padding:9px 11px;font-size:12px;min-height:38px}.marketing-nav-actions .marketing-cta{padding:10px 12px;font-size:11px}.marketing-hero{min-height:760px}.marketing-hero-content{width:100%;padding:34px 6% 0}.marketing-hero h1 .marketing-hero-name{font-size:clamp(42px,10vw,60px)}.marketing-hero h1 small{font-size:24px}.marketing-hero-image{inset:395px 4% 18px;background-position:center;background-size:contain}.marketing-benefits{grid-template-columns:repeat(2,1fr)}.customer-access{padding:22px 12px}.access-card{padding:24px 18px}}
+.customer-access .forgot-password{display:block;width:100%;border:0!important;background:transparent!important;color:#00643e!important;font-size:13px;font-weight:700;padding:11px 5px;margin:2px 0 8px;text-decoration:underline;text-underline-offset:3px}
 </style>
 </head>
 <body>
@@ -131,6 +132,7 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
   <button onclick="signUp()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Create Account</button>
 
   <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Log In</button>
+  <button onclick="resetPassword()" type="button" class="forgot-password">Forgot password? Email me a reset link</button>
 
   <div id="licenseGate" style="display:none;margin-top:18px;padding:18px;border:1px solid #dfe5e1;border-radius:14px;background:#fff;">
     <h3 style="margin:0 0 8px;color:#173d2b;">Unlock MyBuild HQ</h3>
@@ -384,6 +386,29 @@ checkSession();
 
 }
 
+async function resetPassword() {
+  const email = document.getElementById('authEmail').value.trim();
+  const message = document.getElementById('authMessage');
+  if (!email) { message.textContent = 'Enter your account email above, then tap Forgot password.'; document.getElementById('authEmail').focus(); return; }
+  message.textContent = 'Sending password reset email...';
+  try {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://mikahhoover-star.github.io/mybuild-hq/'
+    });
+    message.textContent = error ? ('Could not send reset email: ' + error.message) : 'If an account exists for that email, a reset link will arrive shortly. Check your spam folder too.';
+  } catch (err) { message.textContent = 'Could not send reset email. Please try again.'; }
+}
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') {
+    const password = prompt('Enter a new MyBuild HQ password (at least 6 characters):');
+    if (!password) return;
+    if (password.length < 6) { alert('Password must have at least 6 characters.'); return; }
+    supabaseClient.auth.updateUser({ password }).then(({error}) => {
+      if (error) alert('Could not update password: ' + error.message);
+      else { alert('Password updated. You can now log in with your new password.'); supabaseClient.auth.signOut().then(() => backToLanding()); }
+    });
+  }
+});
 async function signIn() {
 
   const email = document.getElementById('authEmail').value.trim();
