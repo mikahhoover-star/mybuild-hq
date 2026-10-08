@@ -252,6 +252,16 @@ function importData(e){
 }
 render();
 loadFields();
+// Preserve project field edits immediately, including when navigating away.
+document.querySelectorAll('[data-field]').forEach(field => {
+  field.addEventListener('input', () => {
+    db.fields[field.dataset.field] = field.value;
+    localStorage.setItem(KEY, JSON.stringify(db));
+    if (field.dataset.field === 'projectName') {
+      projectTitle.textContent = field.value || 'My Home Build';
+    }
+  });
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
