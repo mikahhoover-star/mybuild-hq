@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#173d2b">
+<meta name="theme-color" content="#173d2b">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="icon" href="icon.svg" type="image/svg+xml">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>MyBuild HQ | Home Building Budget, Quotes & Project Organizer</title>
@@ -202,7 +202,6 @@ function togglePunch(i){db.punch[i].done=!db.punch[i].done;persist()}
 function addCustomCheck(){if(!customCheck.value)return;db.customChecks.push(customCheck.value);customCheck.value='';persist()}
 function toggleMap(map,key){db[map][key]=!db[map][key];persist()}
 function render(){
- loadFields();
  projectTitle.textContent=db.fields.projectName||'My Home Build';
  let spent=db.budget.reduce((s,x)=>s+(+x.amt||0),0);spentStat.textContent=money(spent);
  let done=phases.filter(x=>db.phases[x]).length,pct=Math.round(done/phases.length*100);progressStat.textContent=pct+'%';phaseBar.style.width=pct+'%';phaseText.textContent=done+' of '+phases.length+' phases complete';
@@ -218,8 +217,29 @@ function render(){
 }
 
 function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);persist();alert('Backup imported')}catch{alert('That backup file could not be read')}};r.readAsText(f)}
+function importData(e){
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const imported=JSON.parse(r.result);
+   const lists=['budget','decisions','quotes','materials','punch','customChecks'];
+   if(!imported || typeof imported!=='object' || Array.isArray(imported) ||
+      !imported.fields || typeof imported.fields!=='object' || Array.isArray(imported.fields) ||
+      !lists.every(k=>Array.isArray(imported[k])) ||
+      !imported.phases || typeof imported.phases!=='object' ||
+      !imported.checks || typeof imported.checks!=='object'){
+     throw new Error('Invalid backup');
+   }
+   if(!confirm('Import this backup? It will replace the project saved in this browser. Export your current backup first if needed.'))return;
+   db=imported;persist();loadFields();alert('Backup imported');
+  }catch{alert('This file is not a valid MyBuild HQ backup.')}
+  finally{e.target.value='';}
+ };
+ r.readAsText(f);
+}
 render();
+loadFields();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
