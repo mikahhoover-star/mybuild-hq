@@ -195,7 +195,22 @@ const KEY='mybuildhq_v1';
 const phases=['Planning & permits','Sitework','Foundation','Framing','Roof & dry-in','Rough plumbing','Rough electrical','HVAC','Insulation','Drywall','Interior finishes','Exterior & grading','Final inspections','Walkthrough & closeout'];
 const baseChecks=['Confirm plans and specifications','Confirm permits and required inspections','Verify contractor scope in writing','Track allowances and exclusions','Photograph work before walls are closed','Confirm long-lead materials are ordered','Review each invoice before payment','Document every change order','Test fixtures, doors, windows and equipment','Complete final punch list','Collect warranties and manuals'];
 const questions=['What exactly is included and excluded from this price?','Is this fixed-price, cost-plus, or another structure?','Which allowances are included and what assumptions were used?','Who pulls permits and schedules inspections?','Who supervises the site day to day?','What is the expected start date and build duration?','How are delays and backorders handled?','How are change orders priced and approved?','What is the payment schedule?','Can you provide current insurance information?','What workmanship warranty do you provide?','How are punch-list items and callbacks handled?'];
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||{fields:{},budget:[],decisions:[],quotes:[],materials:[],punch:[],phases:{},checks:{},customChecks:[]};
+const EMPTY_PROJECT=()=>({fields:{},budget:[],decisions:[],quotes:[],materials:[],punch:[],phases:{},checks:{},customChecks:[]});
+function validProject(project) {
+  return !!project && typeof project==='object' && !Array.isArray(project) &&
+    project.fields && typeof project.fields==='object' && !Array.isArray(project.fields) &&
+    ['budget','decisions','quotes','materials','punch','customChecks']
+      .every(k=>Array.isArray(project[k]) && project[k].length<=20000) &&
+    project.phases && typeof project.phases==='object' && !Array.isArray(project.phases) &&
+    project.checks && typeof project.checks==='object' && !Array.isArray(project.checks);
+}
+function initialProject() {
+  try {
+    const parsed=JSON.parse(localStorage.getItem(KEY)||'null');
+    return validProject(parsed)?parsed:EMPTY_PROJECT();
+  } catch { return EMPTY_PROJECT(); }
+}
+let db=initialProject();
 function persist(){localStorage.setItem(KEY,JSON.stringify(db));render()}
 function show(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
 function money(n){return '$'+Number(n||0).toLocaleString(undefined,{maximumFractionDigits:0})}
@@ -239,14 +254,7 @@ function importData(e){
  r.onload=()=>{
   try{
    const imported=JSON.parse(r.result);
-   const lists=['budget','decisions','quotes','materials','punch','customChecks'];
-   if(!imported || typeof imported!=='object' || Array.isArray(imported) ||
-      !imported.fields || typeof imported.fields!=='object' || Array.isArray(imported.fields) ||
-      !lists.every(k=>Array.isArray(imported[k]) && imported[k].length<=20000) ||
-      !imported.phases || typeof imported.phases!=='object' ||
-      !imported.checks || typeof imported.checks!=='object'){
-     throw new Error('Invalid backup');
-   }
+   if(!validProject(imported)) throw new Error('Invalid backup');
    if(!confirm('Import this backup? It will replace the project saved in this browser. Export your current backup first if needed.'))return;
    db=imported;persist();loadFields();alert('Backup imported');
   }catch{alert('This file is not a valid MyBuild HQ backup.')}
@@ -350,6 +358,10 @@ async function loadCloudProject() {
     .select('payload,updated_at').eq('user_id',user.id).maybeSingle();
   if (error) { console.warn('Could not load cloud project', error.message); return; }
   if (!data?.payload) return;
+  if (!validProject(data.payload)) {
+    alert('The cloud project could not be loaded because its format is invalid. Your browser data is unchanged.');
+    return;
+  }
   // Never silently overwrite local project data with a cloud copy.
   if (localStorage.getItem(KEY) && localStorage.getItem(KEY) !== JSON.stringify(data.payload)) {
     if (!confirm('A cloud project was found. Replace this browser\'s project with the cloud copy? Choose Cancel to keep this browser\'s data and export a backup first.')) return;
