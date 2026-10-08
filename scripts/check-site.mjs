@@ -35,3 +35,16 @@ for(const action of ['Read own paid project','Insert own paid project','Update o
 assert.ok(migration.includes("e.status = 'active'"),'Project access must require an active entitlement');
 assert.ok(!html.includes('https://api.gumroad.com/v2/licenses/verify'), 'Browser must not verify Gumroad directly');
 console.log('Static checks passed');
+
+const js=scripts.join('\n');
+for (const match of html.matchAll(/\bonclick="([A-Za-z_$][\w$]*)\(/g)) {
+  assert.ok(new RegExp('function\\s+'+match[1]+'\\s*\\(').test(js),
+    'Missing click handler: '+match[1]);
+}
+for (const match of html.matchAll(/\bonchange="([A-Za-z_$][\w$]*)\(/g)) {
+  assert.ok(new RegExp('function\\s+'+match[1]+'\\s*\\(').test(js),
+    'Missing change handler: '+match[1]);
+}
+assert.ok(!/onchange="toggleMap\('checks'/.test(html),
+  'Custom checklist items must not use inline JavaScript');
+console.log('HTML handler checks passed');
