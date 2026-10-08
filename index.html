@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#173d2b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-title" content="MyBuild HQ">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>MyBuild HQ | Home Building Budget, Quotes & Project Organizer</title>
@@ -36,7 +40,7 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 .empty{color:var(--muted);font-size:13px;padding:8px 0}.note{font-size:12px;color:var(--muted);line-height:1.45}.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:9px max(12px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:30}.bottom button{border:0;background:transparent;color:var(--g);font-weight:800}
 @media(min-width:720px){.grid{grid-template-columns:repeat(4,1fr)}.wrap{padding-top:28px}.hero{padding:30px}.stats{max-width:560px}}
 .landing-features{max-width:900px;margin:18px auto 0;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.landing-feature{background:#fff;border:1px solid var(--line);border-radius:16px;padding:17px}.landing-feature b{display:block;color:var(--g);margin-bottom:5px}.landing-feature span{font-size:14px;line-height:1.45;color:var(--muted)}.landing-note{max-width:620px;margin:14px auto 0;text-align:center;font-size:13px;line-height:1.5;color:var(--muted)}.site-footer{max-width:900px;margin:30px auto 0;padding-top:20px;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:12px;line-height:1.55}
-@media(max-width:560px){#landingScreen{padding-left:12px!important;padding-right:12px!important}.landing-features{grid-template-columns:1fr}.stats{gap:6px}.stat{padding:10px 7px}.hero h1{font-size:23px}}
+@media(max-width:560px){.row{grid-template-columns:1fr}#landingScreen{padding-left:12px!important;padding-right:12px!important}.landing-features{grid-template-columns:1fr}.stats{gap:6px}.stat{padding:10px 7px}.hero h1{font-size:23px}}
 </style>
 </head>
 <body>
@@ -73,7 +77,7 @@ Progress • Questions • Checklists
 
 <p style="margin:0 0 20px;color:#666;">One-time purchase • No subscription</p>
 
-<button onclick="showPurchase()" style="width:100%;padding:16px;background:#173d2b;color:white;border:0;border-radius:12px;font-size:17px;font-weight:700;">
+<button type="button" onclick="showPurchase()" style="width:100%;padding:16px;background:#173d2b;color:white;border:0;border-radius:12px;font-size:17px;font-weight:700;">
 
 Get MyBuild HQ for $24.99 →
 
@@ -84,7 +88,7 @@ Get MyBuild HQ for $24.99 →
 <strong style="color:#173d2b;">How access works</strong><br>
 1. Buy MyBuild HQ through Gumroad.<br>
 2. Return here and create your account or log in.<br>
-3. Paste the license key from your Gumroad receipt once to unlock the dashboard.
+3. Enter your Gumroad license key if one was issued. If your receipt has no key, contact support rather than buying again.
 </div>
 
 <p style="margin:22px 0 0;color:#555;">
@@ -103,7 +107,7 @@ Already purchased?
   <div class="landing-feature"><b>🧱 Track selections & decisions</b><span>Keep materials, choices, cost impacts and ordering status organized as your build moves forward.</span></div>
   <div class="landing-feature"><b>📋 Stay ahead of the build</b><span>Use construction phases, contractor questions, checklists and a punch list from planning through closeout.</span></div>
 </div>
-<p class="landing-note"><strong>Built for homeowners managing a home build.</strong> MyBuild HQ works in your browser. Project entries are stored on the device you use, and the included backup tools let you export a copy of your data.</p>
+<p class="landing-note"><strong>Built for homeowners managing a home build.</strong> MyBuild HQ works in your browser. Project entries are stored in your browser. Account cloud save and backup export are available in the dashboard.</p>
 <div class="site-footer">MyBuild HQ • Your Build. Your Plan. Your HQ.<br>One-time purchase. No recurring subscription. Checkout and license delivery are handled by Gumroad.</div>
 
 </div>
@@ -121,23 +125,38 @@ Already purchased?
 
   <button onclick="signIn()" style="width:100%;padding:14px;margin:8px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Log In</button>
 
+  <button onclick="resetPassword()" type="button" style="width:100%;padding:12px;margin:4px 0;border:0;background:transparent;color:#173d2b;text-decoration:underline;">Forgot password? Send reset email</button>
+
+  <div id="passwordRecovery" style="display:none;margin:12px 0;padding:14px;background:white;border:1px solid #dfe5e1;border-radius:12px;">
+    <label for="newPassword">New password (8+ characters)</label>
+    <input id="newPassword" type="password" autocomplete="new-password" minlength="8">
+    <button type="button" class="primary" onclick="finishPasswordReset()">Save New Password</button>
+  </div>
   <div id="licenseGate" style="display:none;margin-top:18px;padding:18px;border:1px solid #dfe5e1;border-radius:14px;background:#fff;">
     <h3 style="margin:0 0 8px;color:#173d2b;">Unlock MyBuild HQ</h3>
-    <p style="font-size:14px;color:#68706b;line-height:1.5;margin-bottom:12px;">Your purchase is complete. One last step: paste the <strong>license key</strong> Gumroad gave you, then tap <strong>Unlock MyBuild HQ</strong>.</p>
+    <p style="font-size:14px;color:#68706b;line-height:1.5;margin-bottom:12px;">If Gumroad issued a <strong>license key</strong> for your purchase, paste it below to unlock MyBuild HQ. If your receipt has no key, contact the seller for help accessing your existing purchase. You do not need to buy again.</p>
     <div style="background:#f7f7f2;border-radius:12px;padding:13px;margin:0 0 12px;font-size:13px;line-height:1.55;color:#444;text-align:left;">
       <strong style="color:#173d2b;">Where is my license key?</strong><br>
       1. Open your Gumroad purchase receipt or product page.<br>
       2. Find the section labeled <strong>License key</strong>.<br>
-      3. Copy the key and paste it below.
+      3. Copy the key and paste it below. If no key appears, contact the seller with your receipt.
     </div>
     <input id="licenseKey" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your license key here" style="width:100%;padding:14px;margin:8px 0;">
     <button onclick="pasteLicense()" type="button" style="width:100%;padding:12px;margin:4px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Paste License Key</button>
     <button onclick="verifyLicense()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Unlock MyBuild HQ →</button>
-    <p id="licenseMessage" style="font-size:13px;line-height:1.45;"></p>
-    <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">You only need to verify this browser once. Keep your Gumroad receipt in case you use a different device later.</p>
+    <p id="licenseMessage" role="status" aria-live="polite" style="font-size:13px;line-height:1.45;"></p>
+    <button type="button" class="ghost" onclick="signOutFromLicenseGate()">Use a Different Account</button>
+    <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">Once verified, your purchase is linked to your account. Keep your Gumroad receipt for support.</p>
   </div>
 
-  <p id="authMessage"></p>\n\n  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
+  <p id="authMessage" role="status" aria-live="polite"></p>
+  <div style="margin-top:12px;padding:12px;border:1px solid #dfe5e1;border-radius:12px;">
+    <p class="note">Switching accounts on a shared device? Export this browser's project before clearing its saved data. This does not delete the cloud copy.</p>
+    <button type="button" class="ghost" onclick="exportData()">Export Browser Backup</button>
+    <button type="button" class="ghost danger" onclick="clearBrowserProjectForAccountSwitch()">Clear Browser Data to Switch Accounts</button>
+  </div>
+
+  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
 
 </div>
 <div id="appScreen" style="display:none;"> <header><div class="brand"><div class="logo">⌂</div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><div style="display:flex;gap:8px"><button class="ghost" onclick="show('home')">HQ</button><button class="ghost" onclick="logOut()">Log Out</button></div></header>
@@ -155,7 +174,7 @@ Already purchased?
 <button class="tool" onclick="show('checklists')"><span class="ico">📋</span><b>Checklists</b><small>Stay ahead of each phase</small></button>
 <button class="tool" onclick="show('punch')"><span class="ico">🛠️</span><b>Punch List</b><small>Final fixes & walkthrough</small></button>
 </div>
-<div class="card" style="margin-top:14px"><h3>Your data</h3><p class="note">This version saves your entries on this device using your browser. Use Export Backup occasionally so you have a copy.</p><button class="primary" onclick="exportData()">Export Backup</button> <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
+<div class="card" style="margin-top:14px"><h3>Your data</h3><p class="note">Changes are saved in this browser. Use Save to Account to sync a copy to your account, and Export Backup to keep an additional copy. Cloud syncing is manual in this version.</p><button class="primary" onclick="exportData()">Export Backup</button> <button class="ghost" onclick="saveCloudProject()">Save to Account</button> <button class="ghost" onclick="loadCloudProject()">Load Account Copy</button> <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
 </section>
 
 <section id="project" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Project</h2></div><div class="card"><h3>Build Profile</h3><label>Project name</label><input data-field="projectName" placeholder="My Home Build"><div class="row"><div><label>Target budget</label><input data-field="targetBudget" type="number" inputmode="decimal" placeholder="250000"></div><div><label>Target move-in</label><input data-field="moveIn" type="date"></div></div><label>Builder / contractor</label><input data-field="builder" placeholder="Company or person"><label>Property / location</label><input data-field="location" placeholder="City, state or project address"><label>Must-haves & goals</label><textarea data-field="goals" placeholder="What matters most for this build?"></textarea><button class="primary" onclick="saveFields()">Save Project</button></div></section>
@@ -182,27 +201,48 @@ const KEY='mybuildhq_v1';
 const phases=['Planning & permits','Sitework','Foundation','Framing','Roof & dry-in','Rough plumbing','Rough electrical','HVAC','Insulation','Drywall','Interior finishes','Exterior & grading','Final inspections','Walkthrough & closeout'];
 const baseChecks=['Confirm plans and specifications','Confirm permits and required inspections','Verify contractor scope in writing','Track allowances and exclusions','Photograph work before walls are closed','Confirm long-lead materials are ordered','Review each invoice before payment','Document every change order','Test fixtures, doors, windows and equipment','Complete final punch list','Collect warranties and manuals'];
 const questions=['What exactly is included and excluded from this price?','Is this fixed-price, cost-plus, or another structure?','Which allowances are included and what assumptions were used?','Who pulls permits and schedules inspections?','Who supervises the site day to day?','What is the expected start date and build duration?','How are delays and backorders handled?','How are change orders priced and approved?','What is the payment schedule?','Can you provide current insurance information?','What workmanship warranty do you provide?','How are punch-list items and callbacks handled?'];
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||{fields:{},budget:[],decisions:[],quotes:[],materials:[],punch:[],phases:{},checks:{},customChecks:[]};
+const EMPTY_PROJECT=()=>({fields:{},budget:[],decisions:[],quotes:[],materials:[],punch:[],phases:{},checks:{},customChecks:[]});
+function validProject(project) {
+  if(!project || typeof project!=='object' || Array.isArray(project)) return false;
+  if(!project.fields || typeof project.fields!=='object' || Array.isArray(project.fields)) return false;
+  if(!project.phases || typeof project.phases!=='object' || Array.isArray(project.phases)) return false;
+  if(!project.checks || typeof project.checks!=='object' || Array.isArray(project.checks)) return false;
+  const collections=['budget','decisions','quotes','materials','punch','customChecks'];
+  if(!collections.every(k=>Array.isArray(project[k]) && project[k].length<=20000)) return false;
+  const isEntry=x=>x!==null && typeof x==='object' && !Array.isArray(x);
+  if(!['budget','decisions','quotes','materials','punch'].every(k=>project[k].every(isEntry))) return false;
+  if(!project.customChecks.every(x=>typeof x==='string' && x.length<=300)) return false;
+  if(!Object.values(project.fields).every(x=>typeof x==='string' || typeof x==='number')) return false;
+  if(!Object.values(project.phases).every(x=>typeof x==='boolean')) return false;
+  if(!Object.values(project.checks).every(x=>typeof x==='boolean')) return false;
+  return true;
+}
+function initialProject() {
+  try {
+    const parsed=JSON.parse(localStorage.getItem(KEY)||'null');
+    return validProject(parsed)?parsed:EMPTY_PROJECT();
+  } catch { return EMPTY_PROJECT(); }
+}
+let db=initialProject();
 function persist(){localStorage.setItem(KEY,JSON.stringify(db));render()}
 function show(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
-function money(n){return '$'+Number(n||0).toLocaleString(undefined,{maximumFractionDigits:0})}
+function money(n){const value=Number(n);return String.fromCharCode(36)+(Number.isFinite(value)?value:0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function saveFields(){document.querySelectorAll('[data-field]').forEach(x=>db.fields[x.dataset.field]=x.value);persist();alert('Project saved')}
 function loadFields(){document.querySelectorAll('[data-field]').forEach(x=>x.value=db.fields[x.dataset.field]||'')}
 function addItem(type){
- if(type==='budget'){let a=+budgetAmt.value;if(!budgetCat.value||!a)return;db.budget.push({cat:budgetCat.value,amt:a,note:budgetNote.value});budgetCat.value=budgetAmt.value=budgetNote.value=''}
- if(type==='decisions'){if(!decisionName.value)return;db.decisions.push({name:decisionName.value,choice:decisionChoice.value,cost:+decisionCost.value||0,note:decisionNote.value});decisionName.value=decisionChoice.value=decisionCost.value=decisionNote.value=''}
- if(type==='quotes'){if(!quoteCompany.value)return;db.quotes.push({company:quoteCompany.value,trade:quoteTrade.value,total:+quoteTotal.value||0,note:quoteNote.value});quoteCompany.value=quoteTrade.value=quoteTotal.value=quoteNote.value=''}
- if(type==='materials'){if(!matName.value)return;db.materials.push({name:matName.value,choice:matChoice.value,budget:+matBudget.value||0,status:matStatus.value});matName.value=matChoice.value=matBudget.value=''}
- if(type==='punch'){if(!punchIssue.value)return;db.punch.push({area:punchArea.value,who:punchWho.value,issue:punchIssue.value,done:false});punchArea.value=punchWho.value=punchIssue.value=''}
+ if(type==='budget'){let a=+budgetAmt.value;if(!budgetCat.value||!Number.isFinite(a)||a<=0){alert('Enter a category and a cost greater than zero.');return;}db.budget.push({cat:budgetCat.value,amt:a,note:budgetNote.value});budgetCat.value=budgetAmt.value=budgetNote.value=''}
+ if(type==='decisions'){if(!decisionName.value.trim()||!Number.isFinite(+decisionCost.value)){alert('Enter a decision and a valid cost impact.');return;}db.decisions.push({name:decisionName.value,choice:decisionChoice.value,cost:+decisionCost.value||0,note:decisionNote.value});decisionName.value=decisionChoice.value=decisionCost.value=decisionNote.value=''}
+ if(type==='quotes'){if(!quoteCompany.value.trim()||!quoteTotal.value.trim()||!Number.isFinite(+quoteTotal.value)||+quoteTotal.value<0){alert('Enter a contractor and a valid quote amount.');return;}db.quotes.push({company:quoteCompany.value,trade:quoteTrade.value,total:+quoteTotal.value||0,note:quoteNote.value});quoteCompany.value=quoteTrade.value=quoteTotal.value=quoteNote.value=''}
+ if(type==='materials'){if(!matName.value.trim()||!matBudget.value.trim()||!Number.isFinite(+matBudget.value)||+matBudget.value<0){alert('Enter a material and a valid budget amount.');return;}db.materials.push({name:matName.value,choice:matChoice.value,budget:+matBudget.value||0,status:matStatus.value});matName.value=matChoice.value=matBudget.value=''}
+ if(type==='punch'){if(!punchIssue.value.trim())return;db.punch.push({area:punchArea.value,who:punchWho.value,issue:punchIssue.value,done:false});punchArea.value=punchWho.value=punchIssue.value=''}
  persist()
 }
-function del(type,i){db[type].splice(i,1);persist()}
-function togglePunch(i){db.punch[i].done=!db.punch[i].done;persist()}
-function addCustomCheck(){if(!customCheck.value)return;db.customChecks.push(customCheck.value);customCheck.value='';persist()}
-function toggleMap(map,key){db[map][key]=!db[map][key];persist()}
+function del(type,i){if(!['budget','decisions','quotes','materials','punch'].includes(type)||!Number.isInteger(i)||i<0||i>=db[type].length)return;if(!confirm('Delete this item?'))return;db[type].splice(i,1);persist()}
+function togglePunch(i){if(!Number.isInteger(i)||i<0||i>=db.punch.length)return;db.punch[i].done=!db.punch[i].done;persist()}
+function addCustomCheck(){const label=customCheck.value.trim();if(!label)return;if(label.length>300||baseChecks.includes(label)||db.customChecks.includes(label)){alert('Use a unique checklist item under 300 characters.');return;}db.customChecks.push(label);customCheck.value='';persist()}
+function toggleMap(map,key){if(!['checks','phases'].includes(map)||typeof key!=='string'||!key||['__proto__','constructor','prototype'].includes(key))return;db[map][key]=!db[map][key];persist()}
 function render(){
- loadFields();
  projectTitle.textContent=db.fields.projectName||'My Home Build';
  let spent=db.budget.reduce((s,x)=>s+(+x.amt||0),0);spentStat.textContent=money(spent);
  let done=phases.filter(x=>db.phases[x]).length,pct=Math.round(done/phases.length*100);progressStat.textContent=pct+'%';phaseBar.style.width=pct+'%';phaseText.textContent=done+' of '+phases.length+' phases complete';
@@ -212,14 +252,41 @@ function render(){
  quoteList.innerHTML=db.quotes.length?db.quotes.map((x,i)=>`<div class="item"><div><strong>${esc(x.company)} — ${money(x.total)}</strong><p>${esc(x.trade)} · ${esc(x.note)}</p></div><button class="ghost danger" onclick="del('quotes',${i})">Delete</button></div>`).join(''):'<div class="empty">No quotes saved yet.</div>';
  matList.innerHTML=db.materials.length?db.materials.map((x,i)=>`<div class="item"><div><strong>${esc(x.name)} — ${esc(x.status)}</strong><p>${esc(x.choice)} · ${money(x.budget)}</p></div><button class="ghost danger" onclick="del('materials',${i})">Delete</button></div>`).join(''):'<div class="empty">No materials saved yet.</div>';
  punchList.innerHTML=db.punch.length?db.punch.map((x,i)=>`<div class="check ${x.done?'done':''}"><input type="checkbox" ${x.done?'checked':''} onchange="togglePunch(${i})"><span><strong>${esc(x.area||'Issue')}</strong> — ${esc(x.issue)}<br><small>${esc(x.who)}</small></span><button class="ghost danger" onclick="del('punch',${i})">×</button></div>`).join(''):'<div class="empty">No punch-list issues yet.</div>';
- phaseList.innerHTML=phases.map(x=>`<label class="check ${db.phases[x]?'done':''}"><input type="checkbox" ${db.phases[x]?'checked':''} onchange="toggleMap('phases',${JSON.stringify(x)})"><span>${esc(x)}</span></label>`).join('');
+ phaseList.innerHTML=phases.map((x,i)=>`<label class="check ${db.phases[x]?'done':''}"><input type="checkbox" ${db.phases[x]?'checked':''} data-phase-index="${i}"><span>${esc(x)}</span></label>`).join('');
+ phaseList.querySelectorAll('[data-phase-index]').forEach(input=>input.addEventListener('change',()=>toggleMap('phases',phases[Number(input.dataset.phaseIndex)])));
  questionList.innerHTML=questions.map(x=>`<div class="check"><span>☐</span><span>${esc(x)}</span></div>`).join('');
- let all=baseChecks.concat(db.customChecks);checkList.innerHTML=all.map((x,i)=>`<label class="check ${db.checks[x]?'done':''}"><input type="checkbox" ${db.checks[x]?'checked':''} onchange="toggleMap('checks',${JSON.stringify(x)})"><span>${esc(x)}</span></label>`).join('');
+ let all=baseChecks.concat(db.customChecks);checkList.innerHTML=all.map((x,i)=>`<label class="check ${db.checks[x]?'done':''}"><input type="checkbox" ${db.checks[x]?'checked':''} data-check-index="${i}"><span>${esc(x)}</span></label>`).join('');
+ checkList.querySelectorAll('[data-check-index]').forEach(input=>input.addEventListener('change',()=>toggleMap('checks',all[Number(input.dataset.checkIndex)])));
 }
 
 function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);persist();alert('Backup imported')}catch{alert('That backup file could not be read')}};r.readAsText(f)}
+function importData(e){
+ const f=e.target.files[0];if(!f)return;
+ if(f.size>5*1024*1024){alert('Backup exceeds the 5 MB import limit.');e.target.value='';return;}
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const imported=JSON.parse(r.result);
+   if(!validProject(imported)) throw new Error('Invalid backup');
+   if(!confirm('Import this backup? It will replace the project saved in this browser. Export your current backup first if needed.'))return;
+   db=imported;persist();loadFields();alert('Backup imported');
+  }catch{alert('This file is not a valid MyBuild HQ backup.')}
+  finally{e.target.value='';}
+ };
+ r.readAsText(f);
+}
 render();
+loadFields();
+// Preserve project field edits immediately, including when navigating away.
+document.querySelectorAll('[data-field]').forEach(field => {
+  field.addEventListener('input', () => {
+    db.fields[field.dataset.field] = field.value;
+    localStorage.setItem(KEY, JSON.stringify(db));
+    if (field.dataset.field === 'projectName') {
+      projectTitle.textContent = field.value || 'My Home Build';
+    }
+  });
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -229,7 +296,7 @@ const SUPABASE_URL = 'https://ibczfpeffcavrewcpdhf.supabase.co';
 
 const SUPABASE_KEY = 'sb_publishable_zerBMpTKgAy3id6qnLUgYA_T2PDCJwh';
 const GUMROAD_PRODUCT_ID = 'TDVYHTW6fumm_w_qSr5rcQ==';
-const LICENSE_STORAGE_KEY = 'mybuildhq_license_v1';
+// Access is determined by server-managed Supabase entitlements, never browser storage.
 
 const supabaseClient =supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 function showPurchase() {
@@ -238,10 +305,14 @@ function showPurchase() {
 
 }
 function showLogin() {
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('passwordRecovery').style.display = 'none';
   document.getElementById('landingScreen').style.display = 'none';
   document.getElementById('authScreen').style.display = 'block';
 }
 function backToLanding() {
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('passwordRecovery').style.display = 'none';
   document.getElementById('authScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'none';
   document.getElementById('landingScreen').style.display = 'block';
@@ -255,23 +326,132 @@ async function logOut() {
   }
   document.getElementById('appScreen').style.display = 'none';
   document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('passwordRecovery').style.display = 'none';
   document.getElementById('landingScreen').style.display = 'block';
   show('home');
 }
-function hasVerifiedLicense() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(LICENSE_STORAGE_KEY) || 'null');
-    return !!(saved && saved.verified === true && saved.productId === GUMROAD_PRODUCT_ID && saved.licenseKey);
-  } catch {
-    return false;
+async function hasVerifiedLicense() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return false;
+  const { data, error } = await supabaseClient.from('purchase_entitlements')
+    .select('status,product_id').eq('user_id',user.id).maybeSingle();
+  return !error && data?.status === 'active' && data?.product_id === GUMROAD_PRODUCT_ID;
+}
+function clearBrowserProjectForAccountSwitch() {
+  if(!confirm('This will permanently clear the project saved in this browser. Export a backup first. Continue?'))return;
+  if(!confirm('Final confirmation: clear browser project data and allow a different account to sign in?'))return;
+  localStorage.removeItem(KEY);
+  localStorage.removeItem('mybuildhq_local_owner');
+  db=EMPTY_PROJECT();
+  render();loadFields();
+  document.getElementById('authMessage').textContent='Browser project cleared. You can now sign in with a different account.';
+}
+async function signOutFromLicenseGate() {
+  const {error}=await supabaseClient.auth.signOut();
+  if(error) {
+    document.getElementById('licenseMessage').textContent='Could not sign out. Try again.';
+    return;
   }
+  document.getElementById('licenseKey').value='';
+  document.getElementById('authPassword').value='';
+  document.getElementById('licenseGate').style.display='none';
+  document.getElementById('authMessage').textContent='Signed out. Sign in with the email used for your purchase.';
 }
 function showLicenseGate() {
   document.getElementById('landingScreen').style.display = 'none';
   document.getElementById('appScreen').style.display = 'none';
   document.getElementById('authScreen').style.display = 'block';
   document.getElementById('licenseGate').style.display = 'block';
-  document.getElementById('authMessage').textContent = 'Account confirmed. Verify your MyBuild HQ purchase to continue.';
+  document.getElementById('authMessage').textContent = 'Please verify your purchase to continue.';
+}
+async function openDashboard() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return;
+  const previousOwner = localStorage.getItem('mybuildhq_local_owner');
+  if (previousOwner && previousOwner !== user.id) {
+    // Never show the previous account's local project to a different user.
+    // Sign out; the previous owner can log back in and export their backup.
+    await supabaseClient.auth.signOut();
+    document.getElementById('appScreen').style.display = 'none';
+    document.getElementById('authScreen').style.display = 'block';
+    document.getElementById('landingScreen').style.display = 'none';
+    document.getElementById('authMessage').textContent =
+      'This browser contains another account\'s project. Sign in as that account to export a backup before switching accounts.';
+    return;
+  }
+  if (!previousOwner) {
+    // Existing pre-account local projects remain with the first signed-in owner.
+    localStorage.setItem('mybuildhq_local_owner',user.id);
+  }
+  document.getElementById('landingScreen').style.display = 'none';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('licenseGate').style.display = 'none';
+  document.getElementById('appScreen').style.display = 'block';
+  await loadCloudProject();
+}
+function cloudRevisionKey(userId) { return 'mybuildhq_cloud_revision_' + userId; }
+function hasLocalProject() {
+  try {
+    const local=JSON.parse(localStorage.getItem(KEY)||'null');
+    if(!validProject(local)) return false;
+    return Object.keys(local.fields).length>0 ||
+      ['budget','decisions','quotes','materials','punch','customChecks'].some(k=>local[k].length>0) ||
+      Object.keys(local.phases).length>0 || Object.keys(local.checks).length>0;
+  } catch { return false; }
+}
+async function loadCloudProject() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user || !(await hasVerifiedLicense())) return;
+  const { data, error } = await supabaseClient.from('project_data')
+    .select('payload,updated_at').eq('user_id',user.id).maybeSingle();
+  if (error) { alert('Cloud project could not be loaded. Your browser data is unchanged.'); return; }
+  if (!data?.payload) return;
+  if (!validProject(data.payload)) {
+    alert('The cloud project format is invalid. Your browser data is unchanged.');
+    return;
+  }
+  // Compare content, not raw JSON strings, and never discard meaningful local edits.
+  const localContent=JSON.stringify(db);
+  const remoteContent=JSON.stringify(data.payload);
+  if (hasLocalProject() && localContent!==remoteContent) {
+    if (!confirm('A cloud project was found. Replace this browser\'s project with the cloud copy? Choose Cancel to export a backup first.')) return;
+  }
+  db=data.payload;
+  localStorage.setItem(KEY,JSON.stringify(db));
+  localStorage.setItem(cloudRevisionKey(user.id),data.updated_at||'');
+  render();loadFields();
+}
+async function saveCloudProject() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user || !(await hasVerifiedLicense())) {
+    alert('Please sign in and verify your purchase before saving to the cloud.');
+    return;
+  }
+  const { data: remote, error: readError } = await supabaseClient.from('project_data')
+    .select('updated_at').eq('user_id',user.id).maybeSingle();
+  if (readError) { alert('Could not check the cloud copy. Try again later.'); return; }
+  const knownRevision=localStorage.getItem(cloudRevisionKey(user.id));
+  if (remote && (!knownRevision || remote.updated_at!==knownRevision)) {
+    alert('A different cloud version exists. Export a backup, then load and review the account copy.');
+    return;
+  }
+  const revision=new Date().toISOString();
+  const query=remote
+    ? supabaseClient.from('project_data')
+        .update({payload:db,updated_at:revision})
+        .eq('user_id',user.id).eq('updated_at',remote.updated_at)
+        .select('updated_at').maybeSingle()
+    : supabaseClient.from('project_data')
+        .insert({user_id:user.id,payload:db,updated_at:revision})
+        .select('updated_at').maybeSingle();
+  const { data: saved, error } = await query;
+  if (error || !saved) {
+    alert('Cloud save did not complete. Your browser copy is still here.');
+    return;
+  }
+  localStorage.setItem(cloudRevisionKey(user.id),saved.updated_at);
+  alert('Project saved to your account.');
 }
 async function pasteLicense() {
   const message = document.getElementById('licenseMessage');
@@ -291,54 +471,26 @@ async function pasteLicense() {
 async function verifyLicense() {
   const key = document.getElementById('licenseKey').value.trim();
   const message = document.getElementById('licenseMessage');
-  if (!key) {
-    message.textContent = 'Enter the license key from your Gumroad receipt.';
-    return;
-  }
+  if (!key) { message.textContent = 'Enter your Gumroad license key.'; return; }
   message.textContent = 'Verifying purchase...';
   try {
-    const body = new URLSearchParams({
-      product_id: GUMROAD_PRODUCT_ID,
-      license_key: key,
-      increment_uses_count: 'false'
+    const { data, error } = await supabaseClient.functions.invoke('verify-gumroad-license', {
+      body: {license_key:key}
     });
-    const response = await fetch('https://api.gumroad.com/v2/licenses/verify', {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body
-    });
-    const result = await response.json();
-    const purchase = result && result.purchase ? result.purchase : {};
-    const invalid = !response.ok || !result.success || purchase.refunded === true || purchase.disputed === true || purchase.chargebacked === true;
-    if (invalid) {
-      localStorage.removeItem(LICENSE_STORAGE_KEY);
-      message.textContent = 'That license could not be verified. Check the key from your Gumroad receipt and try again.';
-      return;
-    }
-    localStorage.setItem(LICENSE_STORAGE_KEY, JSON.stringify({
-      verified: true,
-      productId: GUMROAD_PRODUCT_ID,
-      licenseKey: key,
-      verifiedAt: new Date().toISOString()
-    }));
+    if (error) throw error;
+    if (!(await hasVerifiedLicense())) throw new Error('Entitlement not found');
+    document.getElementById('licenseKey').value = '';
     message.textContent = 'Purchase verified!';
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('licenseGate').style.display = 'none';
-    document.getElementById('appScreen').style.display = 'block';
-  } catch (err) {
-    message.textContent = 'Could not reach Gumroad. Check your connection and try again.';
+    await openDashboard();
+  } catch {
+    message.textContent = 'Purchase could not be verified. Check the license and purchase email, or contact support. Do not buy again if you already have a receipt.';
   }
 }
 async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) return;
-  if (!hasVerifiedLicense()) {
-    showLicenseGate();
-    return;
-  }
-  document.getElementById('landingScreen').style.display = 'none';
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('appScreen').style.display = 'block';
+  if (!(await hasVerifiedLicense())) { showLicenseGate(); return; }
+  await openDashboard();
 }
 
 checkSession();
@@ -372,6 +524,34 @@ checkSession();
 
 }
 
+async function resetPassword() {
+  const email = document.getElementById('authEmail').value.trim();
+  const message = document.getElementById('authMessage');
+  if (!email) { message.textContent = 'Enter your account email first.'; return; }
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://mikahhoover-star.github.io/mybuild-hq/'
+  });
+  message.textContent = error ? 'Could not send a reset email. Try again shortly.' : 'If this email has an account, check your inbox for a password reset link.';
+}
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event !== 'PASSWORD_RECOVERY') return;
+  document.getElementById('landingScreen').style.display='none';
+  document.getElementById('authScreen').style.display='block';
+  document.getElementById('passwordRecovery').style.display='block';
+  document.getElementById('authMessage').textContent='Choose a new password below.';
+});
+async function finishPasswordReset() {
+  const password = document.getElementById('newPassword').value;
+  const message = document.getElementById('authMessage');
+  if (password.length < 8) { message.textContent='Use at least 8 characters.'; return; }
+  const { error } = await supabaseClient.auth.updateUser({password});
+  message.textContent=error ? 'Could not update password. Try again.' : 'Password updated. Please log in.';
+  if (!error) {
+    document.getElementById('newPassword').value='';
+    document.getElementById('passwordRecovery').style.display='none';
+    await supabaseClient.auth.signOut();
+  }
+}
 async function signIn() {
 
   const email = document.getElementById('authEmail').value.trim();
@@ -399,12 +579,11 @@ async function signIn() {
   }
 
   message.textContent = 'Logged in successfully!';
-  if (!hasVerifiedLicense()) {
+  if (!(await hasVerifiedLicense())) {
     showLicenseGate();
     return;
   }
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('appScreen').style.display = 'block';
+  await openDashboard();
 }
 </script>
 </body>
