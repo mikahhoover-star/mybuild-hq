@@ -201,7 +201,7 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 <button class="tool" onclick="show('checklists')"><span class="ico">📋</span><b>Checklists</b><small>Stay ahead of each phase</small></button>
 <button class="tool" onclick="show('punch')"><span class="ico">🛠️</span><b>Punch List</b><small>Final fixes & walkthrough</small></button>
 </div>
-<div class="card" style="margin-top:14px"><h3>Your data</h3><p class="note">This version saves your entries on this device using your browser. Use Export Backup occasionally so you have a copy.</p><button class="primary" onclick="exportData()">Export Backup</button> <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
+<div class="card" style="margin-top:14px"><h3>Your data</h3><p class="note">Your project is saved in this browser, not automatically synced between devices. Export a backup regularly, especially before clearing browser data or switching phones.</p><button class="primary" onclick="exportData()">Export Backup</button> <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
 </section>
 
 <section id="project" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Project</h2></div><div class="card"><h3>Build Profile</h3><label>Project name</label><input data-field="projectName" placeholder="My Home Build"><div class="row"><div><label>Target budget</label><input data-field="targetBudget" type="number" inputmode="decimal" placeholder="250000"></div><div><label>Target move-in</label><input data-field="moveIn" type="date"></div></div><label>Builder / contractor</label><input data-field="builder" placeholder="Company or person"><label>Property / location</label><input data-field="location" placeholder="City, state or project address"><label>Must-haves & goals</label><textarea data-field="goals" placeholder="What matters most for this build?"></textarea><button class="primary" onclick="saveFields()">Save Project</button></div></section>
@@ -264,7 +264,22 @@ function render(){
 }
 
 function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
-function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{db=JSON.parse(r.result);persist();alert('Backup imported')}catch{alert('That backup file could not be read')}};r.readAsText(f)}
+function importData(e){
+ const f=e.target.files[0];if(!f)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const next=JSON.parse(reader.result);
+   const collections=['budget','decisions','quotes','materials','punch'];
+   if(!next||typeof next!=='object'||!next.fields||typeof next.fields!=='object'||!next.phases||typeof next.phases!=='object'||!collections.every(k=>Array.isArray(next[k]))){throw new Error('Invalid MyBuild HQ backup');}
+   if(!confirm('Importing this backup will replace your current project on this device. Export a backup first if you want to keep it. Continue?'))return;
+   db=next;persist();alert('Backup imported successfully');
+  }catch(err){alert('This is not a valid MyBuild HQ backup. Your current project was not changed.');}
+  finally{e.target.value='';}
+ };
+ reader.onerror=()=>alert('Could not read the backup file. Your current project was not changed.');
+ reader.readAsText(f);
+}
 render();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
