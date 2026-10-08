@@ -230,6 +230,7 @@ function render(){
 function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){
  const f=e.target.files[0];if(!f)return;
+ if(f.size>5*1024*1024){alert('Backup exceeds the 5 MB import limit.');e.target.value='';return;}
  const r=new FileReader();
  r.onload=()=>{
   try{
@@ -237,7 +238,7 @@ function importData(e){
    const lists=['budget','decisions','quotes','materials','punch','customChecks'];
    if(!imported || typeof imported!=='object' || Array.isArray(imported) ||
       !imported.fields || typeof imported.fields!=='object' || Array.isArray(imported.fields) ||
-      !lists.every(k=>Array.isArray(imported[k])) ||
+      !lists.every(k=>Array.isArray(imported[k]) && imported[k].length<=20000) ||
       !imported.phases || typeof imported.phases!=='object' ||
       !imported.checks || typeof imported.checks!=='object'){
      throw new Error('Invalid backup');
