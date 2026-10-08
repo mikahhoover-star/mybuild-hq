@@ -19,11 +19,13 @@ create table if not exists public.purchase_entitlements (
 alter table public.purchase_entitlements enable row level security;
 revoke all on public.purchase_entitlements from anon, authenticated;
 grant select on public.purchase_entitlements to authenticated;
+drop policy if exists "Read own entitlement" on public.purchase_entitlements;
 create policy "Read own entitlement" on public.purchase_entitlements for select to authenticated using (user_id = (select auth.uid()));
 -- No client insert/update/delete policy: service role only.
 
 -- The browser can only read/write project data with an active paid entitlement.
 -- Using the authenticated user's ID prevents cross-account access.
+drop policy if exists "Read own paid project" on public.project_data;
 create policy "Read own paid project" on public.project_data
 for select to authenticated
 using (
@@ -33,6 +35,7 @@ using (
     where e.user_id = (select auth.uid()) and e.status = 'active'
   )
 );
+drop policy if exists "Insert own paid project" on public.project_data;
 create policy "Insert own paid project" on public.project_data
 for insert to authenticated
 with check (
@@ -42,6 +45,7 @@ with check (
     where e.user_id = (select auth.uid()) and e.status = 'active'
   )
 );
+drop policy if exists "Update own paid project" on public.project_data;
 create policy "Update own paid project" on public.project_data
 for update to authenticated
 using (
@@ -58,6 +62,7 @@ with check (
     where e.user_id = (select auth.uid()) and e.status = 'active'
   )
 );
+drop policy if exists "Delete own paid project" on public.project_data;
 create policy "Delete own paid project" on public.project_data
 for delete to authenticated
 using (
