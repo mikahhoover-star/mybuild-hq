@@ -37,3 +37,16 @@ Run these tests on a staging Supabase project before merging PR #4.
 - [ ] Verify accessibility, responsive layout, and browser console errors.
 
 **Current status:** these are tests to perform, not passed test results. No staging deployment has been performed.
+
+## Database authorization regression cases
+
+- [ ] Signed-out visitor cannot read or write either database table.
+- [ ] Signed-in customer without an entitlement cannot read, insert, update, or delete project data.
+- [ ] Customer with a revoked entitlement cannot read, insert, update, or delete project data.
+- [ ] Customer with an active entitlement for another product cannot read, insert, update, or delete MyBuild HQ project data.
+- [ ] Customer with an active MyBuild HQ entitlement can access only their own project.
+- [ ] Customer cannot create, modify, or revoke their own entitlement from the browser.
+- [ ] Attempting to claim the same Gumroad sale from a different account fails.
+- [ ] Invalid JSON backup containing null entries, wrong field types, or excessively long custom checklist items is rejected without replacing browser data.
+- [ ] A cloud save from another device triggers a revision conflict rather than overwriting silently.
+- [ ] Only one app script and one auth script exist in the generated HTML.
