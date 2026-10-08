@@ -79,6 +79,38 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
 @media(max-width:850px){.marketing-nav{gap:8px}.marketing-links{gap:10px;font-size:12px}.marketing-brand-image{width:50px;height:50px}.marketing-brand .brand-word{font-size:22px}.marketing-nav-actions{gap:5px}.marketing-nav-actions .marketing-cta{padding:12px 14px}.marketing-login{padding:10px 13px}.marketing-hero-content{width:62%}.marketing-hero-image{left:54%}}
 @media(max-width:600px){.marketing-nav{height:76px}.marketing-brand-image{width:45px;height:45px}.marketing-brand .brand-word{font-size:20px}.marketing-login{padding:9px 11px;font-size:12px;min-height:38px}.marketing-nav-actions .marketing-cta{padding:10px 12px;font-size:11px}.marketing-hero{min-height:760px}.marketing-hero-content{width:100%;padding:34px 6% 0}.marketing-hero h1 .marketing-hero-name{font-size:clamp(42px,10vw,60px)}.marketing-hero h1 small{font-size:24px}.marketing-hero-image{inset:395px 4% 18px;background-position:center;background-size:contain}.marketing-benefits{grid-template-columns:repeat(2,1fr)}.customer-access{padding:22px 12px}.access-card{padding:24px 18px}}
 .customer-access .forgot-password{display:block;width:100%;border:0!important;background:transparent!important;color:#00643e!important;font-size:13px;font-weight:700;padding:11px 5px;margin:2px 0 8px;text-decoration:underline;text-underline-offset:3px}
+
+/* Dashboard visual identity: cream, charcoal, gold, restrained green */
+#appScreen{--g:#263b30;--g2:#445c4d;--bg:#faf8f3;--card:#fff;--ink:#20231f;--muted:#697169;--soft:#f5efe2;--line:#e9e5db;background:#faf8f3;color:#20231f;min-height:100vh}
+#appScreen header{position:sticky;background:#fffdf9;color:#1d231f;border-bottom:1px solid #e9e3d8;box-shadow:0 4px 20px #24251b09;padding:12px clamp(14px,4vw,40px);gap:14px}
+#appScreen header .brand{gap:13px;color:#161a16;font-size:clamp(19px,2.4vw,26px);letter-spacing:-.5px}
+#appScreen .dashboard-brand-logo{width:clamp(76px,10vw,110px);height:clamp(66px,9vw,88px);object-fit:contain;object-position:center;flex-shrink:0}
+#appScreen .dashboard-brand-name span{color:#b78a3e}
+#appScreen header .tag{color:#817765;font-size:10px;letter-spacing:.7px;opacity:1;margin-top:4px}
+#appScreen header .ghost{border-radius:24px;border:1px solid #d7d0c2;background:#fff;color:#263b30;font-weight:700;padding:10px 15px}
+#appScreen header .ghost:last-child{background:#f6f1e8}
+#appScreen .wrap{max-width:1120px;padding:26px 18px 100px}
+#appScreen .hero{background:linear-gradient(112deg,#fff7e9,#f1e7d7);color:#242720;border:1px solid #e9dfce;border-radius:22px;padding:28px;box-shadow:0 10px 30px #2d261009}
+#appScreen .hero h1{color:#20251f;font-size:clamp(25px,3vw,36px);letter-spacing:-.8px}
+#appScreen .hero p{color:#61675d;opacity:1;margin:8px 0 0}
+#appScreen .stat{background:#ffffffbd;border:1px solid #e5dac9;color:#242b25;border-radius:14px;padding:16px}
+#appScreen .stat b{font-size:23px;color:#202720}
+#appScreen .stat span{color:#68716b;opacity:1;font-size:12px}
+#appScreen .grid{gap:14px}
+#appScreen .tool{border:1px solid #e7e1d7;border-radius:17px;background:#fff;padding:20px;box-shadow:0 6px 18px #22281909;transition:transform .15s,box-shadow .15s}
+#appScreen .tool:hover{transform:translateY(-2px);box-shadow:0 12px 24px #22281912}
+#appScreen .tool .ico{display:grid;place-items:center;width:46px;height:46px;background:#f6f0e5;border-radius:13px;font-size:23px}
+#appScreen .tool b{color:#27362c;font-size:16px;margin-top:13px}
+#appScreen .tool small{color:#6a726b}
+#appScreen .card{border:1px solid #e9e3d9;box-shadow:0 5px 18px #2a241008;border-radius:18px;padding:20px}
+#appScreen .card h3,#appScreen .topline h2{color:#27372d}
+#appScreen .primary{background:#264e39;border-radius:12px}
+#appScreen .back{background:#f4ecdf;color:#263b30}
+#appScreen .bottom{background:#fffdf9;border-color:#e9e3d8}
+#appScreen .bottom button{color:#293d30}
+#appScreen .progress{background:#eee7dc}
+#appScreen .bar{background:#b78a3e}
+@media(max-width:560px){#appScreen header{padding:10px 12px}#appScreen header .brand{gap:6px;font-size:18px}#appScreen .dashboard-brand-logo{width:66px;height:60px}#appScreen header .tag{font-size:8px;letter-spacing:0}#appScreen header .ghost{padding:8px 9px;font-size:12px}#appScreen .wrap{padding:17px 12px 90px}#appScreen .hero{padding:20px}#appScreen .stat{padding:11px 8px}#appScreen .stat b{font-size:17px}#appScreen .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#appScreen .tool{padding:15px}#appScreen .tool b{font-size:14px}}
 </style>
 </head>
 <body>
@@ -154,7 +186,7 @@ label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:9px
   <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back to website</button>
   </div>
 </div>
-<div id="appScreen" style="display:none;"> <header><div class="brand"><div class="logo"><img src="72076EAE-0E64-43DA-B2C1-B0DA0D2B8A74.png" alt="MyBuild HQ" width="52" height="52" style="display:block;width:52px;height:52px;object-fit:contain;border-radius:8px;background:white;"></div><div>MyBuild HQ<div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><div style="display:flex;gap:8px"><button class="ghost" onclick="show('home')">HQ</button><button class="ghost" onclick="logOut()">Log Out</button></div></header>
+<div id="appScreen" style="display:none;"> <header><div class="brand"><img class="dashboard-brand-logo" src="72076EAE-0E64-43DA-B2C1-B0DA0D2B8A74.png" alt="MyBuild HQ original house logo"><div class="dashboard-brand-name">MyBuild <span>HQ</span><div class="tag">Your Build. Your Plan. Your HQ.</div></div></div><div style="display:flex;gap:8px"><button class="ghost" onclick="show('home')">HQ</button><button class="ghost" onclick="logOut()">Log Out</button></div></header>
 <main class="wrap">
 <section id="home" class="section active">
 <div class="hero"><h1 id="projectTitle">My Home Build</h1><p>Everything for your build, in one place.</p><div class="stats"><div class="stat"><b id="spentStat">$0</b><span>Tracked cost</span></div><div class="stat"><b id="progressStat">0%</b><span>Progress</span></div><div class="stat"><b id="openStat">0</b><span>Open items</span></div></div></div>
