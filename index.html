@@ -218,14 +218,14 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&l
 function saveFields(){document.querySelectorAll('[data-field]').forEach(x=>db.fields[x.dataset.field]=x.value);persist();alert('Project saved')}
 function loadFields(){document.querySelectorAll('[data-field]').forEach(x=>x.value=db.fields[x.dataset.field]||'')}
 function addItem(type){
- if(type==='budget'){let a=+budgetAmt.value;if(!budgetCat.value||!a)return;db.budget.push({cat:budgetCat.value,amt:a,note:budgetNote.value});budgetCat.value=budgetAmt.value=budgetNote.value=''}
- if(type==='decisions'){if(!decisionName.value)return;db.decisions.push({name:decisionName.value,choice:decisionChoice.value,cost:+decisionCost.value||0,note:decisionNote.value});decisionName.value=decisionChoice.value=decisionCost.value=decisionNote.value=''}
- if(type==='quotes'){if(!quoteCompany.value)return;db.quotes.push({company:quoteCompany.value,trade:quoteTrade.value,total:+quoteTotal.value||0,note:quoteNote.value});quoteCompany.value=quoteTrade.value=quoteTotal.value=quoteNote.value=''}
- if(type==='materials'){if(!matName.value)return;db.materials.push({name:matName.value,choice:matChoice.value,budget:+matBudget.value||0,status:matStatus.value});matName.value=matChoice.value=matBudget.value=''}
- if(type==='punch'){if(!punchIssue.value)return;db.punch.push({area:punchArea.value,who:punchWho.value,issue:punchIssue.value,done:false});punchArea.value=punchWho.value=punchIssue.value=''}
+ if(type==='budget'){let a=+budgetAmt.value;if(!budgetCat.value||!Number.isFinite(a)||a<=0){alert('Enter a category and a cost greater than zero.');return;}db.budget.push({cat:budgetCat.value,amt:a,note:budgetNote.value});budgetCat.value=budgetAmt.value=budgetNote.value=''}
+ if(type==='decisions'){if(!decisionName.value.trim())return;db.decisions.push({name:decisionName.value,choice:decisionChoice.value,cost:+decisionCost.value||0,note:decisionNote.value});decisionName.value=decisionChoice.value=decisionCost.value=decisionNote.value=''}
+ if(type==='quotes'){if(!quoteCompany.value.trim()||!Number.isFinite(+quoteTotal.value)||+quoteTotal.value<0){alert('Enter a contractor and a valid quote amount.');return;}db.quotes.push({company:quoteCompany.value,trade:quoteTrade.value,total:+quoteTotal.value||0,note:quoteNote.value});quoteCompany.value=quoteTrade.value=quoteTotal.value=quoteNote.value=''}
+ if(type==='materials'){if(!matName.value.trim()||!Number.isFinite(+matBudget.value)||+matBudget.value<0){alert('Enter a material and a valid budget amount.');return;}db.materials.push({name:matName.value,choice:matChoice.value,budget:+matBudget.value||0,status:matStatus.value});matName.value=matChoice.value=matBudget.value=''}
+ if(type==='punch'){if(!punchIssue.value.trim())return;db.punch.push({area:punchArea.value,who:punchWho.value,issue:punchIssue.value,done:false});punchArea.value=punchWho.value=punchIssue.value=''}
  persist()
 }
-function del(type,i){db[type].splice(i,1);persist()}
+function del(type,i){if(!confirm('Delete this item?'))return;db[type].splice(i,1);persist()}
 function togglePunch(i){db.punch[i].done=!db.punch[i].done;persist()}
 function addCustomCheck(){if(!customCheck.value)return;db.customChecks.push(customCheck.value);customCheck.value='';persist()}
 function toggleMap(map,key){db[map][key]=!db[map][key];persist()}
