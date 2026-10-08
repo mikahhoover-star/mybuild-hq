@@ -224,9 +224,11 @@ function render(){
  quoteList.innerHTML=db.quotes.length?db.quotes.map((x,i)=>`<div class="item"><div><strong>${esc(x.company)} — ${money(x.total)}</strong><p>${esc(x.trade)} · ${esc(x.note)}</p></div><button class="ghost danger" onclick="del('quotes',${i})">Delete</button></div>`).join(''):'<div class="empty">No quotes saved yet.</div>';
  matList.innerHTML=db.materials.length?db.materials.map((x,i)=>`<div class="item"><div><strong>${esc(x.name)} — ${esc(x.status)}</strong><p>${esc(x.choice)} · ${money(x.budget)}</p></div><button class="ghost danger" onclick="del('materials',${i})">Delete</button></div>`).join(''):'<div class="empty">No materials saved yet.</div>';
  punchList.innerHTML=db.punch.length?db.punch.map((x,i)=>`<div class="check ${x.done?'done':''}"><input type="checkbox" ${x.done?'checked':''} onchange="togglePunch(${i})"><span><strong>${esc(x.area||'Issue')}</strong> — ${esc(x.issue)}<br><small>${esc(x.who)}</small></span><button class="ghost danger" onclick="del('punch',${i})">×</button></div>`).join(''):'<div class="empty">No punch-list issues yet.</div>';
- phaseList.innerHTML=phases.map(x=>`<label class="check ${db.phases[x]?'done':''}"><input type="checkbox" ${db.phases[x]?'checked':''} onchange="toggleMap('phases',${JSON.stringify(x)})"><span>${esc(x)}</span></label>`).join('');
+ phaseList.innerHTML=phases.map((x,i)=>`<label class="check ${db.phases[x]?'done':''}"><input type="checkbox" ${db.phases[x]?'checked':''} data-phase-index="${i}"><span>${esc(x)}</span></label>`).join('');
+ phaseList.querySelectorAll('[data-phase-index]').forEach(input=>input.addEventListener('change',()=>toggleMap('phases',phases[Number(input.dataset.phaseIndex)])));
  questionList.innerHTML=questions.map(x=>`<div class="check"><span>☐</span><span>${esc(x)}</span></div>`).join('');
- let all=baseChecks.concat(db.customChecks);checkList.innerHTML=all.map((x,i)=>`<label class="check ${db.checks[x]?'done':''}"><input type="checkbox" ${db.checks[x]?'checked':''} onchange="toggleMap('checks',${JSON.stringify(x)})"><span>${esc(x)}</span></label>`).join('');
+ let all=baseChecks.concat(db.customChecks);checkList.innerHTML=all.map((x,i)=>`<label class="check ${db.checks[x]?'done':''}"><input type="checkbox" ${db.checks[x]?'checked':''} data-check-index="${i}"><span>${esc(x)}</span></label>`).join('');
+ checkList.querySelectorAll('[data-check-index]').forEach(input=>input.addEventListener('change',()=>toggleMap('checks',all[Number(input.dataset.checkIndex)])));
 }
 
 function exportData(){let b=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyBuild-HQ-backup.json';a.click();URL.revokeObjectURL(a.href)}
