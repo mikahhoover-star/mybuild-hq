@@ -1,0 +1,18 @@
+{
+  "name": "MyBuild HQ — Your Build. Your Plan. Your HQ.",
+  "short_name": "MyBuild HQ",
+  "description": "Plan and organize your home build.",
+  "start_url": "/mybuild-hq/",
+  "scope": "/mybuild-hq/",
+  "display": "standalone",
+  "background_color": "#f7f7f2",
+  "theme_color": "#173d2b",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
