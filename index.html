@@ -197,12 +197,19 @@ const baseChecks=['Confirm plans and specifications','Confirm permits and requir
 const questions=['What exactly is included and excluded from this price?','Is this fixed-price, cost-plus, or another structure?','Which allowances are included and what assumptions were used?','Who pulls permits and schedules inspections?','Who supervises the site day to day?','What is the expected start date and build duration?','How are delays and backorders handled?','How are change orders priced and approved?','What is the payment schedule?','Can you provide current insurance information?','What workmanship warranty do you provide?','How are punch-list items and callbacks handled?'];
 const EMPTY_PROJECT=()=>({fields:{},budget:[],decisions:[],quotes:[],materials:[],punch:[],phases:{},checks:{},customChecks:[]});
 function validProject(project) {
-  return !!project && typeof project==='object' && !Array.isArray(project) &&
-    project.fields && typeof project.fields==='object' && !Array.isArray(project.fields) &&
-    ['budget','decisions','quotes','materials','punch','customChecks']
-      .every(k=>Array.isArray(project[k]) && project[k].length<=20000) &&
-    project.phases && typeof project.phases==='object' && !Array.isArray(project.phases) &&
-    project.checks && typeof project.checks==='object' && !Array.isArray(project.checks);
+  if(!project || typeof project!=='object' || Array.isArray(project)) return false;
+  if(!project.fields || typeof project.fields!=='object' || Array.isArray(project.fields)) return false;
+  if(!project.phases || typeof project.phases!=='object' || Array.isArray(project.phases)) return false;
+  if(!project.checks || typeof project.checks!=='object' || Array.isArray(project.checks)) return false;
+  const collections=['budget','decisions','quotes','materials','punch','customChecks'];
+  if(!collections.every(k=>Array.isArray(project[k]) && project[k].length<=20000)) return false;
+  const isEntry=x=>x!==null && typeof x==='object' && !Array.isArray(x);
+  if(!['budget','decisions','quotes','materials','punch'].every(k=>project[k].every(isEntry))) return false;
+  if(!project.customChecks.every(x=>typeof x==='string' && x.length<=300)) return false;
+  if(!Object.values(project.fields).every(x=>typeof x==='string' || typeof x==='number')) return false;
+  if(!Object.values(project.phases).every(x=>typeof x==='boolean')) return false;
+  if(!Object.values(project.checks).every(x=>typeof x==='boolean')) return false;
+  return true;
 }
 function initialProject() {
   try {
