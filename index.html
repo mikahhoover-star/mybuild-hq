@@ -150,6 +150,11 @@ Already purchased?
   </div>
 
   <p id="authMessage" role="status" aria-live="polite"></p>
+  <div style="margin-top:12px;padding:12px;border:1px solid #dfe5e1;border-radius:12px;">
+    <p class="note">Switching accounts on a shared device? Export this browser's project before clearing its saved data. This does not delete the cloud copy.</p>
+    <button type="button" class="ghost" onclick="exportData()">Export Browser Backup</button>
+    <button type="button" class="ghost danger" onclick="clearBrowserProjectForAccountSwitch()">Clear Browser Data to Switch Accounts</button>
+  </div>
 
   <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
 
@@ -332,6 +337,15 @@ async function hasVerifiedLicense() {
   const { data, error } = await supabaseClient.from('purchase_entitlements')
     .select('status,product_id').eq('user_id',user.id).maybeSingle();
   return !error && data?.status === 'active' && data?.product_id === GUMROAD_PRODUCT_ID;
+}
+function clearBrowserProjectForAccountSwitch() {
+  if(!confirm('This will permanently clear the project saved in this browser. Export a backup first. Continue?'))return;
+  if(!confirm('Final confirmation: clear browser project data and allow a different account to sign in?'))return;
+  localStorage.removeItem(KEY);
+  localStorage.removeItem('mybuildhq_local_owner');
+  db=EMPTY_PROJECT();
+  render();loadFields();
+  document.getElementById('authMessage').textContent='Browser project cleared. You can now sign in with a different account.';
 }
 async function signOutFromLicenseGate() {
   const {error}=await supabaseClient.auth.signOut();
