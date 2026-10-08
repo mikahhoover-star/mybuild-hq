@@ -48,3 +48,13 @@ for (const match of html.matchAll(/\bonchange="([A-Za-z_$][\w$]*)\(/g)) {
 assert.ok(!/onchange="toggleMap\('checks'/.test(html),
   'Custom checklist items must not use inline JavaScript');
 console.log('HTML handler checks passed');
+
+assert.ok(html.includes('function validProject('),'Project data must be validated');
+assert.ok(html.includes('function cloudRevisionKey('),'Cloud revisions must be scoped by account');
+assert.ok(html.includes('Number.isFinite(a)'),'Budget values must be validated');
+assert.ok(html.includes("confirm('Delete this item?')"),'Destructive deletion must ask for confirmation');
+assert.ok(readFileSync('supabase/config.toml','utf8').includes('verify_jwt = true'),
+  'Purchase function must require JWT verification');
+assert.ok(migration.includes("e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='"),
+  'RLS must scope entitlement to MyBuild HQ product');
+console.log('Extended regression checks passed');
