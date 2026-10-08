@@ -1,0 +1,39 @@
+# MyBuild HQ — pre-launch test checklist
+
+Run these tests on a staging Supabase project before merging PR #4.
+
+## Account and entitlement tests
+- [ ] Unauthenticated requests cannot read or write `project_data`.
+- [ ] Authenticated user without entitlement cannot read or write `project_data`.
+- [ ] User A with an active entitlement can create, read, edit, and delete only A's project.
+- [ ] User A cannot read, overwrite, or delete user B's project even if A knows B's UUID.
+- [ ] User with revoked entitlement cannot read or write a project.
+- [ ] Browser cannot insert or modify `purchase_entitlements` directly.
+- [ ] Invalid Gumroad key is rejected by Edge Function.
+- [ ] A valid license issued to a different email is rejected.
+- [ ] A sale claimed by one account cannot be claimed by another.
+- [ ] A refunded or disputed sale is rejected.
+- [ ] A valid license verifies and creates a server entitlement.
+- [ ] Returning customer can access their project on a second device.
+- [ ] Expired or revoked purchases are reflected in server entitlements.
+
+## Data safety
+- [ ] Existing browser data is backed up before migrating.
+- [ ] First cloud sync does not overwrite an existing cloud project.
+- [ ] A failed network request does not destroy the local copy.
+- [ ] Export and import round trip preserves all supported project sections.
+- [ ] Invalid backup does not replace saved data.
+- [ ] Canceling import leaves saved data unchanged.
+- [ ] Project editing retains unsaved form entries during unrelated rerenders.
+
+## Purchase and app experience
+- [ ] Gumroad product receipt contains a working direct app link.
+- [ ] Gumroad license key generation is enabled and tested.
+- [ ] New purchaser receives instructions and can unlock access.
+- [ ] Existing purchaser without a license key has a supported recovery path.
+- [ ] Signup email verification and password login work on iPhone and desktop.
+- [ ] Checkout shows $24.99 as one-time payment with no subscription.
+- [ ] Home screen icon and manifest load at the GitHub Pages subpath.
+- [ ] Verify accessibility, responsive layout, and browser console errors.
+
+**Current status:** these are tests to perform, not passed test results. No staging deployment has been performed.
