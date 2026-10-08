@@ -213,7 +213,7 @@ function initialProject() {
 let db=initialProject();
 function persist(){localStorage.setItem(KEY,JSON.stringify(db));render()}
 function show(id){document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);render()}
-function money(n){const value=Number(n);return '
+function money(n){const value=Number(n);return String.fromCharCode(36)+(Number.isFinite(value)?value:0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function saveFields(){document.querySelectorAll('[data-field]').forEach(x=>db.fields[x.dataset.field]=x.value);persist();alert('Project saved')}
 function loadFields(){document.querySelectorAll('[data-field]').forEach(x=>x.value=db.fields[x.dataset.field]||'')}
