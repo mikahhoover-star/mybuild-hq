@@ -84,7 +84,7 @@ Get MyBuild HQ for $24.99 →
 <strong style="color:#173d2b;">How access works</strong><br>
 1. Buy MyBuild HQ through Gumroad.<br>
 2. Return here and create your account or log in.<br>
-3. Paste the license key from your Gumroad receipt once to unlock the dashboard.
+3. Enter your Gumroad license key if one was issued. If your receipt has no key, contact support rather than buying again.
 </div>
 
 <p style="margin:22px 0 0;color:#555;">
@@ -103,7 +103,7 @@ Already purchased?
   <div class="landing-feature"><b>🧱 Track selections & decisions</b><span>Keep materials, choices, cost impacts and ordering status organized as your build moves forward.</span></div>
   <div class="landing-feature"><b>📋 Stay ahead of the build</b><span>Use construction phases, contractor questions, checklists and a punch list from planning through closeout.</span></div>
 </div>
-<p class="landing-note"><strong>Built for homeowners managing a home build.</strong> MyBuild HQ works in your browser. Project entries are stored on the device you use, and the included backup tools let you export a copy of your data.</p>
+<p class="landing-note"><strong>Built for homeowners managing a home build.</strong> MyBuild HQ works in your browser. Project entries are stored in your browser. Account cloud save and backup export are available in the dashboard.</p>
 <div class="site-footer">MyBuild HQ • Your Build. Your Plan. Your HQ.<br>One-time purchase. No recurring subscription. Checkout and license delivery are handled by Gumroad.</div>
 
 </div>
@@ -123,18 +123,18 @@ Already purchased?
 
   <div id="licenseGate" style="display:none;margin-top:18px;padding:18px;border:1px solid #dfe5e1;border-radius:14px;background:#fff;">
     <h3 style="margin:0 0 8px;color:#173d2b;">Unlock MyBuild HQ</h3>
-    <p style="font-size:14px;color:#68706b;line-height:1.5;margin-bottom:12px;">Your purchase is complete. One last step: paste the <strong>license key</strong> Gumroad gave you, then tap <strong>Unlock MyBuild HQ</strong>.</p>
+    <p style="font-size:14px;color:#68706b;line-height:1.5;margin-bottom:12px;">If Gumroad issued a <strong>license key</strong> for your purchase, paste it below to unlock MyBuild HQ. If your receipt has no key, contact the seller for help accessing your existing purchase. You do not need to buy again.</p>
     <div style="background:#f7f7f2;border-radius:12px;padding:13px;margin:0 0 12px;font-size:13px;line-height:1.55;color:#444;text-align:left;">
       <strong style="color:#173d2b;">Where is my license key?</strong><br>
       1. Open your Gumroad purchase receipt or product page.<br>
       2. Find the section labeled <strong>License key</strong>.<br>
-      3. Copy the key and paste it below.
+      3. Copy the key and paste it below. If no key appears, contact the seller with your receipt.
     </div>
     <input id="licenseKey" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your license key here" style="width:100%;padding:14px;margin:8px 0;">
     <button onclick="pasteLicense()" type="button" style="width:100%;padding:12px;margin:4px 0;border:1px solid #173d2b;background:white;color:#173d2b;border-radius:10px;font-weight:700;">Paste License Key</button>
     <button onclick="verifyLicense()" style="width:100%;padding:14px;margin:8px 0;background:#173d2b;color:white;border:0;border-radius:10px;font-weight:700;">Unlock MyBuild HQ →</button>
     <p id="licenseMessage" style="font-size:13px;line-height:1.45;"></p>
-    <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">You only need to verify this browser once. Keep your Gumroad receipt in case you use a different device later.</p>
+    <p style="font-size:12px;color:#68706b;line-height:1.45;margin-top:12px;">Once verified, your purchase is linked to your account. Keep your Gumroad receipt for support.</p>
   </div>
 
   <p id="authMessage"></p>\n\n  <button onclick="backToLanding()" style="width:100%;padding:12px;margin-top:6px;border:0;background:transparent;color:#173d2b;font-weight:700;">← Back</button>
@@ -155,7 +155,7 @@ Already purchased?
 <button class="tool" onclick="show('checklists')"><span class="ico">📋</span><b>Checklists</b><small>Stay ahead of each phase</small></button>
 <button class="tool" onclick="show('punch')"><span class="ico">🛠️</span><b>Punch List</b><small>Final fixes & walkthrough</small></button>
 </div>
-<div class="card" style="margin-top:14px"><h3>Your data</h3><p class="note">This version saves your entries on this device using your browser. Use Export Backup occasionally so you have a copy.</p><button class="primary" onclick="exportData()">Export Backup</button> <button class="ghost" onclick="saveCloudProject()">Save to Account</button> <button class="ghost" onclick="loadCloudProject()">Load Account Copy</button> <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
+<div class="card" style="margin-top:14px"><h3>Your data</h3><p class="note">Changes are saved in this browser. Use Save to Account to sync a copy to your account, and Export Backup to keep an additional copy. Cloud syncing is manual in this version.</p><button class="primary" onclick="exportData()">Export Backup</button> <button class="ghost" onclick="saveCloudProject()">Save to Account</button> <button class="ghost" onclick="loadCloudProject()">Load Account Copy</button> <button class="ghost" onclick="document.getElementById('importFile').click()">Import</button><input id="importFile" type="file" accept=".json" hidden onchange="importData(event)"></div>
 </section>
 
 <section id="project" class="section"><div class="topline"><button class="back" onclick="show('home')">← HQ</button><h2>Project</h2></div><div class="card"><h3>Build Profile</h3><label>Project name</label><input data-field="projectName" placeholder="My Home Build"><div class="row"><div><label>Target budget</label><input data-field="targetBudget" type="number" inputmode="decimal" placeholder="250000"></div><div><label>Target move-in</label><input data-field="moveIn" type="date"></div></div><label>Builder / contractor</label><input data-field="builder" placeholder="Company or person"><label>Property / location</label><input data-field="location" placeholder="City, state or project address"><label>Must-haves & goals</label><textarea data-field="goals" placeholder="What matters most for this build?"></textarea><button class="primary" onclick="saveFields()">Save Project</button></div></section>
