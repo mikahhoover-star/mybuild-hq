@@ -483,7 +483,7 @@ async function verifyLicense() {
     message.textContent = 'Purchase verified!';
     await openDashboard();
   } catch {
-    message.textContent = 'Purchase could not be verified. Check the license and purchase email, or contact support.';
+    message.textContent = 'Purchase could not be verified. Check the license and purchase email, or contact support. Do not buy again if you already have a receipt.';
   }
 }
 async function checkSession() {
