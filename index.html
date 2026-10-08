@@ -272,6 +272,12 @@ async function logOut() {
   document.getElementById('landingScreen').style.display = 'block';
   show('home');
 }
+async function hasOwnerAccess() {
+  try {
+    const { data, error } = await supabaseClient.auth.getUser();
+    return !error && data && data.user && data.user.app_metadata && data.user.app_metadata.mybuild_hq_owner === true;
+  } catch { return false; }
+}
 function hasVerifiedLicense() {
   try {
     const saved = JSON.parse(localStorage.getItem(LICENSE_STORAGE_KEY) || 'null');
@@ -346,7 +352,7 @@ async function verifyLicense() {
 async function checkSession() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) return;
-  if (!hasVerifiedLicense()) {
+  if (!(hasVerifiedLicense() || await hasOwnerAccess())) {
     showLicenseGate();
     return;
   }
@@ -436,7 +442,7 @@ async function signIn() {
   }
 
   message.textContent = 'Logged in successfully!';
-  if (!hasVerifiedLicense()) {
+  if (!(hasVerifiedLicense() || await hasOwnerAccess())) {
     showLicenseGate();
     return;
   }
