@@ -8,11 +8,6 @@ create table if not exists public.project_data (
 alter table public.project_data enable row level security;
 revoke all on public.project_data from anon;
 grant select, insert, update, delete on public.project_data to authenticated;
-create policy "Read own project" on public.project_data for select to authenticated using (user_id = (select auth.uid()));
-create policy "Insert own project" on public.project_data for insert to authenticated with check (user_id = (select auth.uid()));
-create policy "Update own project" on public.project_data for update to authenticated using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
-create policy "Delete own project" on public.project_data for delete to authenticated using (user_id = (select auth.uid()));
-
 -- Only trusted backend/service-role code may write entitlements.
 create table if not exists public.purchase_entitlements (
   user_id uuid primary key references auth.users(id) on delete cascade,
@@ -26,3 +21,49 @@ revoke all on public.purchase_entitlements from anon, authenticated;
 grant select on public.purchase_entitlements to authenticated;
 create policy "Read own entitlement" on public.purchase_entitlements for select to authenticated using (user_id = (select auth.uid()));
 -- No client insert/update/delete policy: service role only.
+
+-- The browser can only read/write project data with an active paid entitlement.
+-- Using the authenticated user's ID prevents cross-account access.
+create policy "Read own paid project" on public.project_data
+for select to authenticated
+using (
+  user_id = (select auth.uid())
+  and exists (
+    select 1 from public.purchase_entitlements e
+    where e.user_id = (select auth.uid()) and e.status = 'active'
+  )
+);
+create policy "Insert own paid project" on public.project_data
+for insert to authenticated
+with check (
+  user_id = (select auth.uid())
+  and exists (
+    select 1 from public.purchase_entitlements e
+    where e.user_id = (select auth.uid()) and e.status = 'active'
+  )
+);
+create policy "Update own paid project" on public.project_data
+for update to authenticated
+using (
+  user_id = (select auth.uid())
+  and exists (
+    select 1 from public.purchase_entitlements e
+    where e.user_id = (select auth.uid()) and e.status = 'active'
+  )
+)
+with check (
+  user_id = (select auth.uid())
+  and exists (
+    select 1 from public.purchase_entitlements e
+    where e.user_id = (select auth.uid()) and e.status = 'active'
+  )
+);
+create policy "Delete own paid project" on public.project_data
+for delete to authenticated
+using (
+  user_id = (select auth.uid())
+  and exists (
+    select 1 from public.purchase_entitlements e
+    where e.user_id = (select auth.uid()) and e.status = 'active'
+  )
+);
