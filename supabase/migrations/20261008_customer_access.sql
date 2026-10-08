@@ -6,6 +6,7 @@ create table if not exists public.project_data (
   updated_at timestamptz not null default now()
 );
 alter table public.project_data enable row level security;
+alter table public.project_data force row level security;
 revoke all on public.project_data from anon;
 grant select, insert, update, delete on public.project_data to authenticated;
 -- Only trusted backend/service-role code may write entitlements.
@@ -17,6 +18,7 @@ create table if not exists public.purchase_entitlements (
   verified_at timestamptz not null default now()
 );
 alter table public.purchase_entitlements enable row level security;
+alter table public.purchase_entitlements force row level security;
 revoke all on public.purchase_entitlements from anon, authenticated;
 grant select on public.purchase_entitlements to authenticated;
 drop policy if exists "Read own entitlement" on public.purchase_entitlements;
@@ -33,6 +35,7 @@ using (
   and exists (
     select 1 from public.purchase_entitlements e
     where e.user_id = (select auth.uid()) and e.status = 'active'
+      and e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='
   )
 );
 drop policy if exists "Insert own paid project" on public.project_data;
