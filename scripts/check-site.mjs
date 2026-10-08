@@ -58,3 +58,8 @@ assert.ok(readFileSync('supabase/config.toml','utf8').includes('verify_jwt = tru
 assert.ok(migration.includes("e.product_id = 'TDVYHTW6fumm_w_qSr5rcQ=='"),
   'RLS must scope entitlement to MyBuild HQ product');
 console.log('Extended regression checks passed');
+
+assert.ok(html.includes('minimumFractionDigits:2'), 'Financial values must show cents');
+assert.ok(html.includes('Use a unique checklist item under 300 characters.'), 'Duplicate checklist guard required');
+assert.ok(html.includes("['checks','phases'].includes(map)"), 'Checklist toggle must validate target');
+console.log('Financial and checklist checks passed');
