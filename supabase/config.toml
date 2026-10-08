@@ -1,0 +1,4 @@
+# MyBuild HQ Supabase Edge Functions
+# Authentication must remain enabled for purchase verification.
+[functions.verify-gumroad-license]
+verify_jwt = true
