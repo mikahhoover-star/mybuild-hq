@@ -1,6 +1,6 @@
 # Secure purchase access — implementation checklist
 
-**Status: foundation only; not deployed.** Do not merge as a completed security fix. The current GitHub Pages site relies on a client-editable localStorage flag and must not be treated as a secure paywall.
+**Status: Supabase database and JWT-protected Edge Function deployed; frontend NOT deployed.** Gumroad configuration, real customer purchase verification, refund reconciliation, and release tests are still required. Do not merge the draft PR yet.
 
 ## Backend prerequisites
 1. In Supabase SQL Editor run `supabase/migrations/20261008_customer_access.sql`. Existing policies with the same names may need reconciliation if rerunning.
@@ -39,3 +39,13 @@ See issue #3.
 - A purchaser without a license key cannot self-verify through the current API integration. The seller must enable keys or implement a separate verified order lookup.
 - Existing purchasers should never be asked to buy the same product again solely because their receipt lacks a key.
 - A database migration and Edge Function cannot be deployed by a GitHub commit alone.
+
+
+## Deployment verification (2026-10-08)
+
+- Supabase project `ibczfpeffcavrewcpdhf` restored and later reported `ACTIVE_HEALTHY`.
+- Applied `mybuildhq_customer_access` SQL successfully. Live database shows four paid project RLS policies, one entitlement read policy, both tables with forced RLS and no existing rows.
+- Deployed `verify-gumroad-license` Edge Function v1 with JWT verification enabled.
+- Publishable key from website matched connected Supabase project.
+- Security advisor subsequently reported `auth_leaked_password_protection` warning. Enable leaked password protection in Supabase Auth settings; see https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection.
+- **Unverified blockers:** Gumroad license issuance and product ID function secret; purchase email matching, live verification, refund/chargeback reconciliation, mobile checkout and sign-in tests. The GitHub Pages site remains unchanged.
